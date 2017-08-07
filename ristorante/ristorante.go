@@ -59,6 +59,34 @@ func main() {
 }
 
 func root(httpwriter http.ResponseWriter, r *http.Request) {
+
+	// create new template
+	var listtemplate = `
+		{{define "listtemplate"}}
+	
+		<div style="width:800px;">
+			<div style="width:300px; float:left;">
+				<p> 
+            This is the best restaurante in the city. We are still coming up with ideas :-)
+				</p>
+				<p/>
+			</div>
+			<div style="width:300px; float:right;">
+	            In this right panel we can add stuff also!
+			</div>
+		</div>
+
+		{{end}}
+		`
+
+	t, _ := template.ParseFiles("templates/indextemplate.html")
+	t, _ = t.Parse(listtemplate)
+
+	t.Execute(httpwriter, listtemplate)
+	return
+}
+
+func root2(httpwriter http.ResponseWriter, r *http.Request) {
 	http.ServeFile(httpwriter, r, "index.html")
 
 	return
