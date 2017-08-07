@@ -1,0 +1,55 @@
+<html>
+<script type="text/javascript" src="js/angular.min.js"></script>
+<script type="text/javascript" src="app/app.js"></script>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/taskman.css" />
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
+
+</head>
+
+<body ng-app="myApp" ng-controller="tasksController">
+
+
+    <div class="navbar navbar-default" id="navbar">
+        <div class="container" id="navbar-container">
+            <div class="navbar-header">
+                <a href="#" class="navbar-brand">
+                    <small>
+				<i class="glyphicon glyphicon glyphicon-log-out"></i>
+			</small>
+                </a>
+                <!-- /.brand -->
+
+            </div>
+            <!-- /.navbar-header -->
+            <div class="navbar-header pull-right" role="navigation">
+                <a href="/signup" class="btn btn-sm btn-danger nav-button-margin"> <i class="glyphicon glyphicon-book"></i>Signup</a>
+                <a href="/login" class="btn btn-sm btn-warning nav-button-margin"> <i class="glyphicon glyphicon-download"></i>Login</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="container">
+            <blockquote>
+                <h1><a href="">Main Page</a></h1>
+            </blockquote>
+            <div class="col-sm-7">
+                {{ . }}
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar navbar-fixed-bottom" id="navbar">
+        <a href="/" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Main Page</a>
+        <a href="/dishadd" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Add Dish</a>
+        <a href="/drinkadd" class="btn btn-md btn-danger "> <i class="glyphicon glyphicon-book"></i>Add Drink</a>
+        <a href="/placeordervariable" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Place Order Var</a>
+        <a href="/placeorderfile" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Place Order File</a>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+{{ define "listtemplate" }}
+
+<h2>{{ .Info.Name }} </h2>
+
+<table style="width:100%">
+    <tr>
+        {{range .FieldNames }}
+        <td><b>{{.}}</b></td>
+        {{end}}
+    </tr>
+    {{range .Rows }}
+    <tr>
+        {{range .Description }}
+        <td>{{.}}</td>
+        {{end}}
+    </tr>
+    {{end}}
+</table>
+
+{{end }}

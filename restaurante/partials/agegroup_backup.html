@@ -1,0 +1,72 @@
+<div class="widget-box" id="recent-box" ng-controller="agegroupController">
+	<div class="widget-header header-color-blue">
+		<div class="row">
+			<div class="col-sm-6">
+				<h4 class="bigger lighter">
+					<i class="glyphicon glyphicon-align-justify"></i>&nbsp;
+					AGE GROUP LIST
+				</h4>
+			</div>
+		</div>
+	</div>
+	<div class="widget-body ">
+		
+		<div class="agegroup">
+			<label class="checkbox" ng-repeat="agegroup in agegroups">
+				<span>{{agegroup.idagegroup}} ; {{agegroup.description}}</span>
+			</label>
+		</div>
+
+		<table>
+			<tr><th>row number</th></tr>
+			<tr ng-repeat="agegroup in agegroups">
+				<td>{{agegroup.idagegroup}}</td>
+				<td>{{agegroup.description}}</td>
+			</tr>
+		</table>
+		
+		<select>
+		  <option value="volvo">Volvo</option>
+		  <option value="saab">Saab</option>
+		  <option value="mercedes">Mercedes</option>
+		  <option value="audi">Audi</option>
+		</select>
+		
+		<h3>Select Age Group</h3>
+		<select name="s1">
+			<option ng-repeat="agegroup in agegroups">{{agegroup.idagegroup}}</option>
+		</select>
+
+		<p/>
+		<h3>Select Team</h3>
+		<select name="s2">
+			<option ng-repeat="team in teamlist" >{{team.idteam}}</option>
+		</select>
+		
+		<p/>
+		<h3>Select Age Group - New</h3>
+		<select 
+			class="form-control"
+			data-ng-model="ageGroup" 
+			data-ng-options="agegroup.idagegroup for agegroup in agegroups">
+		</select>
+
+		<p/>
+		<h3>Select Team - New</h3>
+		<select 
+			class="form-control"
+			data-ng-model="teamGroup" 
+			data-ng-options="team.idteam for team in teamlist">
+		</select>
+
+		<p/>
+		<h3>Select Team - Filter</h3>
+		<select 
+			class="form-control"
+			data-ng-model="teamGroup" 
+			data-ng-options="team.idteam for team in teamlist | filter:{fkagegroupid: ageGroup.idagegroup}">
+		</select>
+
+	</div>
+</div>
+
