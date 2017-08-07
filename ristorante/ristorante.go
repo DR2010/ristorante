@@ -43,7 +43,7 @@ func main() {
 	http.HandleFunc("/loginpage", loginPage)
 	http.HandleFunc("/dishlist", dishlist)
 	http.HandleFunc("/orderlist", orderlist)
-	http.HandleFunc("/testtemplate", testtemplate)
+	http.HandleFunc("/dishadddisplay", dishadddisplay)
 	http.HandleFunc("/printparm", printparm)
 	http.HandleFunc("/", root) // setting router rule
 
@@ -349,17 +349,30 @@ func dishadd(httpwriter http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func testtemplate(httpwriter http.ResponseWriter, req *http.Request) {
-	t, err := template.ParseFiles("test.html", "t1.tmpl", "t2.tmpl")
-	if err != nil {
-		fmt.Println(err)
-	}
-	items := struct {
-		Name string
-		City string
-	}{
-		Name: "MyName",
-		City: "MyCity",
-	}
-	t.Execute(httpwriter, items)
+func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
+
+	// create new template
+	var listtemplate = `
+			{{define "listtemplate"}}
+
+			<h1>Add Dish</h1>
+			<form method="POST" action="/dishadd">
+				<input type="text" name="dishtype">
+				<p/>
+				<input type="text" name="dishname">
+				<p/> {{.DishPriceLabel}}:
+				<input type="text" name="dishprice" value={{.DishPriceValue}}>
+				<p/>
+				<input type="submit" value="Submit">
+				<p/>
+			</form>
+
+			End of the dishadd.html >> Variable Body contents inside dishadd: {{.Body}} {{end}}
+		`
+
+	t, _ := template.ParseFiles("templates/indextemplate.html")
+	t, _ = t.Parse(listtemplate)
+
+	t.Execute(httpwriter, listtemplate)
+	return
 }

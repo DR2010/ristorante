@@ -20,7 +20,11 @@
     <div class="navbar navbar-fixed-bottom" id="navbar">
         <a href="/" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Main Page</a>
         <a href="/dishlist" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Dish list</a>
-        <a href="/orderlist" class="btn btn-md btn-danger "> <i class="glyphicon glyphicon-book"></i>Order list</a>
+        <a href="/orderlist" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Order list</a>
+        {{if eq .Info.Name "Dish List"}}
+        <a href="/dishadd" class="btn btn-md btn-danger "> <i class="glyphicon glyphicon-book"></i>Add Dish</a>
+        {{end}}
+
     </div>
 
     <script type="text/javascript" src="js/angular.min.js"></script>
