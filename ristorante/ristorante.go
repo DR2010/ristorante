@@ -357,17 +357,20 @@ func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
 
 			<h1>Add Dish</h1>
 			<form method="POST" action="/dishadd">
+				Dish Type:
 				<input type="text" name="dishtype">
-				<p/>
+				<p/> 
+				Dish Name:
 				<input type="text" name="dishname">
-				<p/> {{.DishPriceLabel}}:
-				<input type="text" name="dishprice" value={{.DishPriceValue}}>
+				<p/> 
+				Dish Price:
+				<input type="text" name="dishprice">
 				<p/>
 				<input type="submit" value="Submit">
 				<p/>
 			</form>
 
-			End of the dishadd.html >> Variable Body contents inside dishadd: {{.Body}} {{end}}
+			{{end}}
 		`
 
 	t, _ := template.ParseFiles("templates/indextemplate.html")

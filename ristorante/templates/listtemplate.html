@@ -1,7 +1,11 @@
 {{ define "listtemplate" }}
 
+<div id="header" class="navbar navbar-fixed-right">
+    {{if eq .Info.Name "Dish List" }}
+    <a href="/dishadddisplay" class="btn btn-md btn-warning "> <i class="glyphicon glyphicon-book"></i>Add Dish</a>
+    {{end}}
+</div>
 <h2>{{ .Info.Name }} </h2>
-
 <div style="width:800px;">
     <div style="width:300px; float:left;">
         <p>
