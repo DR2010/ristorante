@@ -1,15 +1,35 @@
-{{define "dishadd"}}
+ {{define "listtemplate"}}
 
 <h1>Add Dish</h1>
 <form method="POST" action="/dishadd">
-    <input type="text" name="dishtype">
-    <p/>
-    <input type="text" name="dishname">
-    <p/> {{.DishPriceLabel}}:
-    <input type="text" name="dishprice" value={{.DishPriceValue}}>
-    <p/>
-    <input type="submit" value="Submit">
-    <p/>
+    <div>
+        <p/> <b>Dish Type:</b>
+        <p/>
+        <input type="text" name="dishtype">
+
+        <p/> <b>Dish Name:</b>
+        <p/>
+        <input type="text" name="dishname">
+
+        <p/> <b>Dish Price:</b>
+        <p/>
+        <input type="text" name="dishprice">
+
+        <p/> <b>Gluten Free:</b>
+        <p/>
+        <input type="text" name="dishglutenfree">
+
+        <p/> <b>Dairy Free:</b>
+        <p/>
+        <input type="text" name="dishdairyfree">
+
+        <p/> <b>Vegetarian:</b>
+        <p/>
+        <input type="text" name="dishvegetarian">
+        <p/>
+        <input type="submit" value="Submit">
+        <p/>
+    </div>
 </form>
 
-End of the dishadd.html >> Variable Body contents inside dishadd: {{.Body}} {{end}}
+{{end}}

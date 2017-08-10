@@ -47,7 +47,8 @@ func Dishadd(database helper.DatabaseX, dishInsert Dish) helper.Resultado {
 	return res
 }
 
-func find(database helper.DatabaseX, dishFind Dish) {
+// Find is for export
+func Find(database helper.DatabaseX, dishFind Dish) {
 
 	database.Collection = "dishes"
 
@@ -70,4 +71,36 @@ func find(database helper.DatabaseX, dishFind Dish) {
 		log.Fatal(err)
 	}
 
+}
+
+// GetAll Documents
+func GetAll(database helper.DatabaseX) []Dish {
+
+	database.Collection = "dishes"
+
+	session, err := mgo.Dial(database.Location)
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB(database.Database).C(database.Collection)
+
+	var results []Dish
+
+	err = c.Find(nil).All(&results)
+	if err != nil {
+		// TODO: Do something about the error
+	} else {
+		return results
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
 }

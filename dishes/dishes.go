@@ -8,10 +8,19 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// ---------------------------------------------------
+//
+// OLD - not maintained - look inside mongodb folder
+//
+//
+
 type Dish struct {
-	Type  string // type of dish, includes drinks and deserts
-	Name  string // name of the dish
-	Price int32  // preco do prato multiplicar por 100 e nao ter digits
+	Type       string // type of dish, includes drinks and deserts
+	Name       string // name of the dish
+	Price      int32  // preco do prato multiplicar por 100 e nao ter digits
+	GlutenFree string // Gluten free dishes
+	DairyFree  string // Dairy Free dishes
+	Vegeterian string // Vegeterian dishes
 }
 
 func add() {

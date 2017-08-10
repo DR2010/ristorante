@@ -9,6 +9,7 @@ import (
 	"mongodb/helper"
 	"mongodb/order"
 	"net/http"
+	"strconv"
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -44,6 +45,7 @@ func main() {
 	http.HandleFunc("/dishlist", dishlist)
 	http.HandleFunc("/orderlist", orderlist)
 	http.HandleFunc("/dishadddisplay", dishadddisplay)
+	http.HandleFunc("/dishadd", dishadd)
 	http.HandleFunc("/printparm", printparm)
 	http.HandleFunc("/", root) // setting router rule
 
@@ -198,31 +200,44 @@ func dishlist(httpwriter http.ResponseWriter, req *http.Request) {
 	// create new template
 	t, _ := template.ParseFiles("templates/indextemplate.html", "templates/listtemplate.html")
 
-	var dishlist = []dishes.Dish{
-		dishes.Dish{Type: "Main", Name: "Feijoada", Price: "200.00"},
-		dishes.Dish{Type: "Main", Name: "Batatada", Price: "130.00"},
-		dishes.Dish{Type: "Desert", Name: "Pudim de leite", Price: "50.00"},
-		dishes.Dish{Type: "Entree", Name: "Almonds", Price: "25.00"},
-	}
+	// var dishlist = []dishes.Dish{
+	// 	dishes.Dish{Type: "Main", Name: "Feijoada", Price: "200.00"},
+	// 	dishes.Dish{Type: "Main", Name: "Batatada", Price: "130.00"},
+	// 	dishes.Dish{Type: "Desert", Name: "Pudim de leite", Price: "50.00"},
+	// 	dishes.Dish{Type: "Entree", Name: "Almonds", Price: "25.00"},
+	// }
+
+	var dishlist = dishes.GetAll(mongodbvar)
 
 	items := DisplayTemplate{}
 	items.Info.Name = "Dish List"
 
+	var numberoffields = 7
+
 	// Set colum names
-	items.FieldNames = make([]string, 3)
+	items.FieldNames = make([]string, numberoffields)
 	items.FieldNames[0] = "ID"
-	items.FieldNames[1] = "Name"
-	items.FieldNames[2] = "Price"
+	items.FieldNames[1] = "Type"
+	items.FieldNames[2] = "Name"
+	items.FieldNames[3] = "Price"
+	items.FieldNames[4] = "GlutenFree"
+	items.FieldNames[5] = "DairyFree"
+	items.FieldNames[6] = "Vegetarian"
 
 	// Set rows to be displayed
 	items.Rows = make([]Row, len(dishlist))
+	// items.RowID = make([]int, len(dishlist))
 
 	for i := 0; i < len(dishlist); i++ {
 		items.Rows[i] = Row{}
-		items.Rows[i].Description = make([]string, 3)
-		items.Rows[i].Description[0] = dishlist[i].Type
-		items.Rows[i].Description[1] = dishlist[i].Name
-		items.Rows[i].Description[2] = dishlist[i].Price
+		items.Rows[i].Description = make([]string, numberoffields)
+		items.Rows[i].Description[0] = strconv.Itoa(i)
+		items.Rows[i].Description[1] = dishlist[i].Type
+		items.Rows[i].Description[2] = dishlist[i].Name
+		items.Rows[i].Description[3] = dishlist[i].Price
+		items.Rows[i].Description[4] = dishlist[i].GlutenFree
+		items.Rows[i].Description[5] = dishlist[i].DairyFree
+		items.Rows[i].Description[6] = dishlist[i].Vegetarian
 	}
 
 	t.Execute(httpwriter, items)
@@ -333,23 +348,7 @@ func orderlist2(httpwriter http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func dishadd(httpwriter http.ResponseWriter, req *http.Request) {
-
-	dishtoadd := dishes.Dish{}
-
-	dishtoadd.Type = req.FormValue("dishtype")
-	dishtoadd.Name = req.FormValue("dishname")
-	dishtoadd.Price = req.FormValue("dishprice")
-
-	ret := dishes.Dishadd(mongodbvar, dishtoadd)
-
-	if ret.IsSuccessful == "Y" {
-		http.ServeFile(httpwriter, req, "success.html")
-		return
-	}
-}
-
-func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
+func dishadddisplay2(httpwriter http.ResponseWriter, req *http.Request) {
 
 	// create new template
 	var listtemplate = `
@@ -357,13 +356,17 @@ func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
 
 			<h1>Add Dish</h1>
 			<form method="POST" action="/dishadd">
+				<p/> 
 				Dish Type:
+				<p/> 
 				<input type="text" name="dishtype">
 				<p/> 
 				Dish Name:
+				<p/> 
 				<input type="text" name="dishname">
 				<p/> 
 				Dish Price:
+				<p/> 
 				<input type="text" name="dishprice">
 				<p/>
 				<input type="submit" value="Submit">
@@ -378,4 +381,49 @@ func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
 
 	t.Execute(httpwriter, listtemplate)
 	return
+}
+
+func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
+
+	type ControllerInfo struct {
+		Name string
+	}
+	type Row struct {
+		Description []string
+	}
+	type DisplayTemplate struct {
+		Info       ControllerInfo
+		FieldNames []string
+		Rows       []Row
+	}
+
+	// create new template
+	t, _ := template.ParseFiles("templates/indextemplate.html", "templates/dishadd.html")
+
+	items := DisplayTemplate{}
+	items.Info.Name = "Dish Add"
+
+	t.Execute(httpwriter, items)
+	return
+
+}
+
+func dishadd(httpwriter http.ResponseWriter, req *http.Request) {
+
+	dishtoadd := dishes.Dish{}
+
+	dishtoadd.Type = req.FormValue("dishtype")
+	dishtoadd.Name = req.FormValue("dishname")
+	dishtoadd.Price = req.FormValue("dishprice")
+	dishtoadd.GlutenFree = req.FormValue("dishglutenfree")
+	dishtoadd.DairyFree = req.FormValue("dishdairyfree")
+	dishtoadd.Vegetarian = req.FormValue("dishvegetarian")
+
+	ret := dishes.Dishadd(mongodbvar, dishtoadd)
+
+	if ret.IsSuccessful == "Y" {
+		// http.ServeFile(httpwriter, req, "success.html")
+		http.Redirect(httpwriter, req, "/dishlist", 301)
+		return
+	}
 }
