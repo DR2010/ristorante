@@ -45,6 +45,8 @@ func main() {
 	http.HandleFunc("/dishlist", dishlist)
 	http.HandleFunc("/orderlist", orderlist)
 	http.HandleFunc("/dishadddisplay", dishadddisplay)
+	http.HandleFunc("/dishupdatedisplay", dishupdatedisplay)
+	http.HandleFunc("/Submit", dishupdatedisplay)
 	http.HandleFunc("/dishadd", dishadd)
 	http.HandleFunc("/printparm", printparm)
 	http.HandleFunc("/", root) // setting router rule
@@ -298,91 +300,6 @@ func orderlist(httpwriter http.ResponseWriter, req *http.Request) {
 
 }
 
-func orderlist2(httpwriter http.ResponseWriter, req *http.Request) {
-
-	var loadinplace = `
-		{{define "loadinplace"}}
-		<table style="width:100%">
-		<tr>
-			<th>Hard Coded Field 1</th>
-			<th>{{ .Cfield2 }} </th>
-			<th>{{ .Cfield3 }} </th>
-			<th>{{ .Cfield4 }} </th>
-		</tr>
-		<tr>
-			<td>Order List</td>
-			<td>My Order List 1</td>
-			<td>My Order more </td>
-			<td>50.00</td>
-		</tr>
-		<tr>
-			<td>Order Client 1</td>
-			<td>My Order 1</td>
-			<td>My Order more </td>
-			<td>50.00</td>
-		</tr>
-		</table>
-		{{end}}
-		`
-
-	// create new template
-	t, _ := template.ParseFiles("indextemplate.tmpl")
-	t, _ = t.Parse(loadinplace)
-
-	err1 := t.Execute(httpwriter, map[string]string{
-		"Cfield1": "Order #",
-		"Cfield2": "Order Name",
-		"Cfield3": "Order Description",
-		"Cfield4": "Order Cost",
-	})
-
-	// err1 := t.ExecuteTemplate(httpwriter, "loadinplace", map[string]string{
-	// 	"Cfield1": "Order #",
-	// 	"Cfield2": "Order Name",
-	// 	"Cfield3": "Order Description",
-	// 	"Cfield4": "Order Cost",
-	// })
-
-	if err1 != nil {
-		panic(err1)
-	}
-}
-
-func dishadddisplay2(httpwriter http.ResponseWriter, req *http.Request) {
-
-	// create new template
-	var listtemplate = `
-			{{define "listtemplate"}}
-
-			<h1>Add Dish</h1>
-			<form method="POST" action="/dishadd">
-				<p/> 
-				Dish Type:
-				<p/> 
-				<input type="text" name="dishtype">
-				<p/> 
-				Dish Name:
-				<p/> 
-				<input type="text" name="dishname">
-				<p/> 
-				Dish Price:
-				<p/> 
-				<input type="text" name="dishprice">
-				<p/>
-				<input type="submit" value="Submit">
-				<p/>
-			</form>
-
-			{{end}}
-		`
-
-	t, _ := template.ParseFiles("templates/indextemplate.html")
-	t, _ = t.Parse(listtemplate)
-
-	t.Execute(httpwriter, listtemplate)
-	return
-}
-
 func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
 
 	type ControllerInfo struct {
@@ -426,4 +343,51 @@ func dishadd(httpwriter http.ResponseWriter, req *http.Request) {
 		http.Redirect(httpwriter, req, "/dishlist", 301)
 		return
 	}
+}
+
+func dishupdatedisplay(httpwriter http.ResponseWriter, req *http.Request) {
+
+	req.ParseForm()
+
+	// Get all selected records
+	myCars := req.Form["dishes"]
+
+	// use only the first one to edit
+	// if none selected bouce back
+	// for the first one selected
+	// --- get all dishtype and filter down to the first selected.
+	// --- or try to go straight to index
+	// the DB needs an unique ID... if I have a unique ID I can go straight to DB
+	// instead of walking through the indexes...
+	// in fact the id used as "value" should be the DB ID
+	// 10-Aug-2017 - continuar....
+	//
+	// dishtype := req.Form["dishtype"]
+
+	type ControllerInfo struct {
+		Name string
+	}
+	type Row struct {
+		Description []string
+	}
+	type DisplayTemplate struct {
+		Info       ControllerInfo
+		FieldNames []string
+		Rows       []Row
+		DishItem   dishes.Dish
+	}
+
+	// create new template
+	t, _ := template.ParseFiles("templates/indextemplate.html", "templates/dishupdate.html")
+
+	items := DisplayTemplate{}
+	items.Info.Name = "Dish Add"
+
+	items.DishItem = dishes.Dish{}
+	items.DishItem.Type = myCars[0]
+	items.DishItem.Name = "Dish Name"
+
+	t.Execute(httpwriter, items)
+	return
+
 }

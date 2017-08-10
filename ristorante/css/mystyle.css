@@ -1,3 +1,11 @@
+button {
+    color: #FFF;
+    background-color: #7c6d84;
+    font-size: 15px;
+    height: 40px;
+    border-radius: 4px;
+}
+
 myHero {
     display: block;
     background-color: #dddddd;

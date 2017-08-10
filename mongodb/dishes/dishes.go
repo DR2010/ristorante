@@ -73,6 +73,7 @@ func find(database helper.DatabaseX, dishFind Dish) {
 
 }
 
+// GetAll works
 func GetAll(database helper.DatabaseX) []Dish {
 
 	database.Collection = "dishes"

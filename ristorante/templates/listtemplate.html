@@ -1,10 +1,10 @@
 {{ define "listtemplate" }}
-
+<form action="Submit" method="POST" />
 <div id="header" class="navbar navbar-fixed-right">
     {{if eq .Info.Name "Dish List" }}
-    <a href="/dishadddisplay" class="btn btn-md btn-warning "> <i class="glyphicon glyphicon-book"></i>Add</a>
-    <a href="/dishupdatedisplay" class="btn btn-md btn-warning "> <i class="glyphicon glyphicon-book"></i>Update</a>
-    {{end}}
+    <button type="submit" value="Add">Add</button>
+    <button type="submit" value="Update">Update</button>
+    <button type="submit" value="Delete">Delete</button> {{end}}
 </div>
 <h2>{{ .Info.Name }} </h2>
 <div style="width:800px;">
@@ -20,7 +20,7 @@
                 {{range .Rows }}
                 <tr>
                     <td>
-                        <input type="checkbox" name="field{{ index .Description 0 }}" unchecked>
+                        <input type="checkbox" name="dishes" value="{{ index .Description 0 }}" unchecked>
                     </td>
                     {{range .Description }}
                     <td>{{.}}</td>
@@ -32,4 +32,5 @@
         <p/>
     </div>
 </div>
+</form>
 {{end}}
