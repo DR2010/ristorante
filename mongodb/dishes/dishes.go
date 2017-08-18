@@ -10,12 +10,13 @@ import (
 
 // Dish is to be exported
 type Dish struct {
-	Type       string // type of dish, includes drinks and deserts
-	Name       string // name of the dish
-	Price      string // preco do prato multiplicar por 100 e nao ter digits
-	GlutenFree string // Gluten free dishes
-	DairyFree  string // Dairy Free dishes
-	Vegetarian string // Vegeterian dishes
+	SystemID   bson.ObjectId `json:"id"        bson:"_id,omitempty"`
+	Name       string        // name of the dish - this is the KEY, must be unique
+	Type       string        // type of dish, includes drinks and deserts
+	Price      string        // preco do prato multiplicar por 100 e nao ter digits
+	GlutenFree string        // Gluten free dishes
+	DairyFree  string        // Dairy Free dishes
+	Vegetarian string        // Vegeterian dishes
 }
 
 // Dishadd is for export
@@ -48,11 +49,13 @@ func Dishadd(database helper.DatabaseX, dishInsert Dish) helper.Resultado {
 	return res
 }
 
-func find(database helper.DatabaseX, dishFind Dish) {
+// Find is to find stuff
+func Find(database helper.DatabaseX, dishFind string) Dish {
 
 	database.Collection = "dishes"
 
-	dishName := dishFind.Name
+	dishName := dishFind
+	dishnull := Dish{}
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
@@ -65,12 +68,19 @@ func find(database helper.DatabaseX, dishFind Dish) {
 
 	c := session.DB(database.Database).C(database.Collection)
 
-	result := Dish{}
-	err = c.Find(bson.M{"Name": dishName}).One(&result)
-	if err != nil {
-		log.Fatal(err)
+	result := []Dish{}
+	err1 := c.Find(bson.M{"name": dishName}).All(&result)
+	if err1 != nil {
+		log.Fatal(err1)
 	}
 
+	var numrecsel = len(result)
+
+	if numrecsel <= 0 {
+		return dishnull
+	}
+
+	return result[0]
 }
 
 // GetAll works
@@ -103,4 +113,64 @@ func GetAll(database helper.DatabaseX) []Dish {
 	}
 
 	return nil
+}
+
+// Dishupdate is
+func Dishupdate(database helper.DatabaseX, dishUpdate Dish) helper.Resultado {
+
+	database.Collection = "dishes"
+
+	session, err := mgo.Dial(database.Location)
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	collection := session.DB(database.Database).C(database.Collection)
+
+	err = collection.Update(bson.M{"name": dishUpdate.Name}, dishUpdate)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var res helper.Resultado
+	res.ErrorCode = "0001"
+	res.ErrorDescription = "Something Happened"
+	res.IsSuccessful = "Y"
+
+	return res
+}
+
+// Dishdelete is
+func Dishdelete(database helper.DatabaseX, dishUpdate Dish) helper.Resultado {
+
+	database.Collection = "dishes"
+
+	session, err := mgo.Dial(database.Location)
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	collection := session.DB(database.Database).C(database.Collection)
+
+	err = collection.Remove(bson.M{"name": dishUpdate.Name})
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var res helper.Resultado
+	res.ErrorCode = "0001"
+	res.ErrorDescription = "Something Happened"
+	res.IsSuccessful = "Y"
+
+	return res
 }

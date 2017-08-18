@@ -1,33 +1,33 @@
  {{define "listtemplate"}}
 
-<h1>Add Dish</h1>
+<h1>Update Dish</h1>
 <form method="POST" action="/dishupdate">
     <div>
         <p/> <b>Dish Type:</b>
         <p/>
-        <input type="text" name="dishtype" value="{{ .DishItem.Type }}">
+        <input type="text" name="dishtype" value="{{ .DishItem.Type }}" readonly>
 
         <p/> <b>Dish Name:</b>
         <p/>
-        <input type="text" name="dishname">
+        <input type="text" name="dishname" value="{{ .DishItem.Name }}" readonly>
 
         <p/> <b>Dish Price:</b>
         <p/>
-        <input type="text" name="dishprice">
+        <input type="text" name="dishprice" value="{{ .DishItem.Price }}">
 
         <p/> <b>Gluten Free:</b>
         <p/>
-        <input type="text" name="dishglutenfree">
+        <input type="text" name="dishglutenfree" value="{{ .DishItem.GlutenFree }}">
 
         <p/> <b>Dairy Free:</b>
         <p/>
-        <input type="text" name="dishdairyfree">
+        <input type="text" name="dishdairyfree" value="{{ .DishItem.DairyFree }}">
 
         <p/> <b>Vegetarian:</b>
         <p/>
-        <input type="text" name="dishvegetarian">
+        <input type="text" name="dishvegetarian" value="{{ .DishItem.Vegetarian }}">
         <p/>
-        <input type="submit" value="Submit">
+        <input type="submit" formaction="/dishupdate" value="Submit">
         <p/>
     </div>
 </form>

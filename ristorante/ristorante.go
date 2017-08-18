@@ -9,10 +9,8 @@ import (
 	"mongodb/helper"
 	"mongodb/order"
 	"net/http"
-	"strconv"
 	"strings"
 
-	_ "github.com/go-sql-driver/mysql"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -25,16 +23,16 @@ var err error
 //
 func main() {
 
-	db, err = sql.Open("mysql", "root:oculos18@/gufcdraws")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer db.Close()
+	// db, err = sql.Open("mysql", "root:oculos18@/gufcdraws")
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+	// defer db.Close()
 
-	err = db.Ping()
-	if err != nil {
-		panic(err.Error())
-	}
+	// err = db.Ping()
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
 
 	mongodbvar.Location = "localhost"
 	mongodbvar.Database = "restaurante"
@@ -46,8 +44,10 @@ func main() {
 	http.HandleFunc("/orderlist", orderlist)
 	http.HandleFunc("/dishadddisplay", dishadddisplay)
 	http.HandleFunc("/dishupdatedisplay", dishupdatedisplay)
-	http.HandleFunc("/Submit", dishupdatedisplay)
+	http.HandleFunc("/dishdeletedisplay", dishdeletedisplay)
 	http.HandleFunc("/dishadd", dishadd)
+	http.HandleFunc("/dishupdate", dishupdate)
+	http.HandleFunc("/dishdelete", dishdelete)
 	http.HandleFunc("/printparm", printparm)
 	http.HandleFunc("/", root) // setting router rule
 
@@ -68,18 +68,6 @@ func root(httpwriter http.ResponseWriter, r *http.Request) {
 	var listtemplate = `
 		{{define "listtemplate"}}
 	
-		<div style="width:800px;">
-			<div style="width:300px; float:left;">
-				<p> 
-            This is the best restaurante in the city. We are still coming up with ideas :-)
-				</p>
-				<p/>
-			</div>
-			<div style="width:300px; float:right;">
-	            In this right panel we can add stuff also!
-			</div>
-		</div>
-
 		{{end}}
 		`
 
@@ -214,17 +202,16 @@ func dishlist(httpwriter http.ResponseWriter, req *http.Request) {
 	items := DisplayTemplate{}
 	items.Info.Name = "Dish List"
 
-	var numberoffields = 7
+	var numberoffields = 6
 
 	// Set colum names
 	items.FieldNames = make([]string, numberoffields)
-	items.FieldNames[0] = "ID"
+	items.FieldNames[0] = "Name"
 	items.FieldNames[1] = "Type"
-	items.FieldNames[2] = "Name"
-	items.FieldNames[3] = "Price"
-	items.FieldNames[4] = "GlutenFree"
-	items.FieldNames[5] = "DairyFree"
-	items.FieldNames[6] = "Vegetarian"
+	items.FieldNames[2] = "Price"
+	items.FieldNames[3] = "GlutenFree"
+	items.FieldNames[4] = "DairyFree"
+	items.FieldNames[5] = "Vegetarian"
 
 	// Set rows to be displayed
 	items.Rows = make([]Row, len(dishlist))
@@ -233,13 +220,12 @@ func dishlist(httpwriter http.ResponseWriter, req *http.Request) {
 	for i := 0; i < len(dishlist); i++ {
 		items.Rows[i] = Row{}
 		items.Rows[i].Description = make([]string, numberoffields)
-		items.Rows[i].Description[0] = strconv.Itoa(i)
+		items.Rows[i].Description[0] = dishlist[i].Name
 		items.Rows[i].Description[1] = dishlist[i].Type
-		items.Rows[i].Description[2] = dishlist[i].Name
-		items.Rows[i].Description[3] = dishlist[i].Price
-		items.Rows[i].Description[4] = dishlist[i].GlutenFree
-		items.Rows[i].Description[5] = dishlist[i].DairyFree
-		items.Rows[i].Description[6] = dishlist[i].Vegetarian
+		items.Rows[i].Description[2] = dishlist[i].Price
+		items.Rows[i].Description[3] = dishlist[i].GlutenFree
+		items.Rows[i].Description[4] = dishlist[i].DairyFree
+		items.Rows[i].Description[5] = dishlist[i].Vegetarian
 	}
 
 	t.Execute(httpwriter, items)
@@ -329,8 +315,8 @@ func dishadd(httpwriter http.ResponseWriter, req *http.Request) {
 
 	dishtoadd := dishes.Dish{}
 
+	dishtoadd.Name = req.FormValue("dishname") // This is the key, must be unique
 	dishtoadd.Type = req.FormValue("dishtype")
-	dishtoadd.Name = req.FormValue("dishname")
 	dishtoadd.Price = req.FormValue("dishprice")
 	dishtoadd.GlutenFree = req.FormValue("dishglutenfree")
 	dishtoadd.DairyFree = req.FormValue("dishdairyfree")
@@ -350,19 +336,14 @@ func dishupdatedisplay(httpwriter http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 
 	// Get all selected records
-	myCars := req.Form["dishes"]
+	dishselected := req.Form["dishes"]
 
-	// use only the first one to edit
-	// if none selected bouce back
-	// for the first one selected
-	// --- get all dishtype and filter down to the first selected.
-	// --- or try to go straight to index
-	// the DB needs an unique ID... if I have a unique ID I can go straight to DB
-	// instead of walking through the indexes...
-	// in fact the id used as "value" should be the DB ID
-	// 10-Aug-2017 - continuar....
-	//
-	// dishtype := req.Form["dishtype"]
+	var numrecsel = len(dishselected)
+
+	if numrecsel <= 0 {
+		http.Redirect(httpwriter, req, "/dishlist", 301)
+		return
+	}
 
 	type ControllerInfo struct {
 		Name string
@@ -384,10 +365,104 @@ func dishupdatedisplay(httpwriter http.ResponseWriter, req *http.Request) {
 	items.Info.Name = "Dish Add"
 
 	items.DishItem = dishes.Dish{}
-	items.DishItem.Type = myCars[0]
-	items.DishItem.Name = "Dish Name"
+	items.DishItem.Name = dishselected[0]
+
+	var dishfind = dishes.Dish{}
+	var dishname = items.DishItem.Name
+
+	dishfind = dishes.Find(mongodbvar, dishname)
+	items.DishItem = dishfind
 
 	t.Execute(httpwriter, items)
+
 	return
 
+}
+
+func dishupdate(httpwriter http.ResponseWriter, req *http.Request) {
+
+	dishtoadd := dishes.Dish{}
+
+	dishtoadd.Name = req.FormValue("dishname") // This is the key, must be unique
+	dishtoadd.Type = req.FormValue("dishtype")
+	dishtoadd.Price = req.FormValue("dishprice")
+	dishtoadd.GlutenFree = req.FormValue("dishglutenfree")
+	dishtoadd.DairyFree = req.FormValue("dishdairyfree")
+	dishtoadd.Vegetarian = req.FormValue("dishvegetarian")
+
+	ret := dishes.Dishupdate(mongodbvar, dishtoadd)
+
+	if ret.IsSuccessful == "Y" {
+		// http.ServeFile(httpwriter, req, "success.html")
+		http.Redirect(httpwriter, req, "/dishlist", 301)
+		return
+	}
+}
+
+func dishdeletedisplay(httpwriter http.ResponseWriter, req *http.Request) {
+
+	req.ParseForm()
+
+	// Get all selected records
+	dishselected := req.Form["dishes"]
+
+	var numrecsel = len(dishselected)
+
+	if numrecsel <= 0 {
+		http.Redirect(httpwriter, req, "/dishlist", 301)
+		return
+	}
+
+	type ControllerInfo struct {
+		Name string
+	}
+	type Row struct {
+		Description []string
+	}
+	type DisplayTemplate struct {
+		Info       ControllerInfo
+		FieldNames []string
+		Rows       []Row
+		DishItem   dishes.Dish
+	}
+
+	// create new template
+	t, _ := template.ParseFiles("templates/indextemplate.html", "templates/dishdelete.html")
+
+	items := DisplayTemplate{}
+	items.Info.Name = "Dish Delete"
+
+	items.DishItem = dishes.Dish{}
+	items.DishItem.Name = dishselected[0]
+
+	var dishfind = dishes.Dish{}
+	var dishname = items.DishItem.Name
+
+	dishfind = dishes.Find(mongodbvar, dishname)
+	items.DishItem = dishfind
+
+	t.Execute(httpwriter, items)
+
+	return
+
+}
+
+func dishdelete(httpwriter http.ResponseWriter, req *http.Request) {
+
+	dishtoadd := dishes.Dish{}
+
+	dishtoadd.Name = req.FormValue("dishname") // This is the key, must be unique
+	dishtoadd.Type = req.FormValue("dishtype")
+	dishtoadd.Price = req.FormValue("dishprice")
+	dishtoadd.GlutenFree = req.FormValue("dishglutenfree")
+	dishtoadd.DairyFree = req.FormValue("dishdairyfree")
+	dishtoadd.Vegetarian = req.FormValue("dishvegetarian")
+
+	ret := dishes.Dishdelete(mongodbvar, dishtoadd)
+
+	if ret.IsSuccessful == "Y" {
+		// http.ServeFile(httpwriter, req, "success.html")
+		http.Redirect(httpwriter, req, "/dishlist", 301)
+		return
+	}
 }
