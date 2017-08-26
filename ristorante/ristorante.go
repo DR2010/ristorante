@@ -11,6 +11,8 @@ import (
 	"net/http"
 	"strings"
 
+	_ "github.com/go-sql-driver/mysql"
+
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -37,28 +39,24 @@ func main() {
 	mongodbvar.Location = "localhost"
 	mongodbvar.Database = "restaurante"
 
-	fmt.Println("Running...")
+	fmt.Println("Running... Listening to :1515")
 
-	http.HandleFunc("/loginpage", loginPage)
-	http.HandleFunc("/dishlist", dishlist)
-	http.HandleFunc("/orderlist", orderlist)
-	http.HandleFunc("/dishadddisplay", dishadddisplay)
-	http.HandleFunc("/dishupdatedisplay", dishupdatedisplay)
-	http.HandleFunc("/dishdeletedisplay", dishdeletedisplay)
-	http.HandleFunc("/dishadd", dishadd)
-	http.HandleFunc("/dishupdate", dishupdate)
-	http.HandleFunc("/dishdelete", dishdelete)
-	http.HandleFunc("/printparm", printparm)
-	http.HandleFunc("/", root) // setting router rule
+	router := XNewRouter()
+
+	// handle using the router mux
+	//
+	http.Handle("/", router) // setting router rule
 
 	http.Handle("/html/", http.StripPrefix("/html", http.FileServer(http.Dir("./"))))
 	http.Handle("/js/", http.StripPrefix("/js", http.FileServer(http.Dir("./js"))))
 	http.Handle("/ts/", http.StripPrefix("/ts", http.FileServer(http.Dir("./ts"))))
 	http.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("./css"))))
+	http.Handle("/fonts/", http.StripPrefix("/fonts", http.FileServer(http.Dir("./fonts"))))
 
 	err := http.ListenAndServe(":1515", nil) // setting listening port
 	if err != nil {
-		log.Fatal("ListenAndServe: ", err)
+		//using the mux router
+		log.Fatal("ListenAndServe: ", router)
 	}
 }
 
@@ -291,9 +289,11 @@ func dishadddisplay(httpwriter http.ResponseWriter, req *http.Request) {
 	type ControllerInfo struct {
 		Name string
 	}
+
 	type Row struct {
 		Description []string
 	}
+
 	type DisplayTemplate struct {
 		Info       ControllerInfo
 		FieldNames []string
