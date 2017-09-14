@@ -89,6 +89,7 @@ func GetAll(database helper.DatabaseX) []Dish {
 	database.Collection = "dishes"
 
 	session, err := mgo.Dial(database.Location)
+
 	if err != nil {
 		panic(err)
 	}

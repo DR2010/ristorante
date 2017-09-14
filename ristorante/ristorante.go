@@ -2,12 +2,13 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"log"
+	"mongodb/anyobject"
 	"mongodb/dishes"
 	"mongodb/helper"
-	"mongodb/order"
 	"net/http"
 	"strings"
 
@@ -39,7 +40,7 @@ func main() {
 	mongodbvar.Location = "localhost"
 	mongodbvar.Database = "restaurante"
 
-	fmt.Println("Running... Listening to :1515")
+	fmt.Println("Running... Listening to :1515 - print")
 
 	router := XNewRouter()
 
@@ -56,7 +57,7 @@ func main() {
 	err := http.ListenAndServe(":1515", nil) // setting listening port
 	if err != nil {
 		//using the mux router
-		log.Fatal("ListenAndServe: ", router)
+		log.Fatal("ListenAndServe: ", err)
 	}
 }
 
@@ -106,7 +107,7 @@ func printparm(httpwriter http.ResponseWriter, r *http.Request) {
 
 func signupPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "signup.html")
+		http.ServeFile(res, req, "templates/signup.html")
 
 		return
 	}
@@ -144,7 +145,7 @@ func signupPage(res http.ResponseWriter, req *http.Request) {
 
 func loginPage(res http.ResponseWriter, req *http.Request) {
 	if req.Method != "POST" {
-		http.ServeFile(res, req, "login.html")
+		http.ServeFile(res, req, "templates/login.html")
 		return
 	}
 
@@ -187,13 +188,6 @@ func dishlist(httpwriter http.ResponseWriter, req *http.Request) {
 
 	// create new template
 	t, _ := template.ParseFiles("templates/indextemplate.html", "templates/listtemplate.html")
-
-	// var dishlist = []dishes.Dish{
-	// 	dishes.Dish{Type: "Main", Name: "Feijoada", Price: "200.00"},
-	// 	dishes.Dish{Type: "Main", Name: "Batatada", Price: "130.00"},
-	// 	dishes.Dish{Type: "Desert", Name: "Pudim de leite", Price: "50.00"},
-	// 	dishes.Dish{Type: "Entree", Name: "Almonds", Price: "25.00"},
-	// }
 
 	var dishlist = dishes.GetAll(mongodbvar)
 
@@ -246,18 +240,23 @@ func orderlist(httpwriter http.ResponseWriter, req *http.Request) {
 	// create new template
 	t, _ := template.ParseFiles("templates/indextemplate.html", "templates/listtemplate.html")
 
-	var orderlist = []order.Order{
-		order.Order{ID: "Main", ClientName: "Daniel", Date: "10-Jan-2017", Time: "10:00", Total: "100.00"},
-		order.Order{ID: "Main", ClientName: "Katia", Date: "10-Jan-2017", Time: "10:00", Total: "100.00"},
-		order.Order{ID: "Main", ClientName: "Arthur", Date: "10-Jan-2017", Time: "10:00", Total: "100.00"},
-		order.Order{ID: "Main", ClientName: "Kevin", Date: "10-Jan-2017", Time: "10:00", Total: "100.00"},
-	}
-
-	numitems := len(orderlist)
-	numcolumns := 5
+	var orderlist []dishes.Dish
+	var res = anyobject.GetAll(mongodbvar, "dishes")
 
 	items := DisplayTemplate{}
 	items.Info.Name = "Order List"
+	numcolumns := 5
+	numitems := 0
+
+	if len(res) > 0 {
+		err := json.Unmarshal(res, &orderlist)
+
+		if err != nil {
+			return
+		}
+
+		numitems = len(orderlist)
+	}
 
 	// Set colum names
 	items.FieldNames = make([]string, numcolumns)
@@ -273,11 +272,11 @@ func orderlist(httpwriter http.ResponseWriter, req *http.Request) {
 	for i := 0; i < numitems; i++ {
 		items.Rows[i] = Row{}
 		items.Rows[i].Description = make([]string, numcolumns)
-		items.Rows[i].Description[0] = orderlist[i].ID
-		items.Rows[i].Description[1] = orderlist[i].ClientName
-		items.Rows[i].Description[2] = orderlist[i].Date
-		items.Rows[i].Description[3] = orderlist[i].Time
-		items.Rows[i].Description[4] = orderlist[i].Total
+		items.Rows[i].Description[0] = orderlist[i].Name
+		items.Rows[i].Description[1] = orderlist[i].Price
+		items.Rows[i].Description[2] = orderlist[i].GlutenFree
+		items.Rows[i].Description[3] = orderlist[i].DairyFree
+		items.Rows[i].Description[4] = orderlist[i].Vegetarian
 	}
 
 	t.Execute(httpwriter, items)
@@ -465,4 +464,40 @@ func dishdelete(httpwriter http.ResponseWriter, req *http.Request) {
 		http.Redirect(httpwriter, req, "/dishlist", 301)
 		return
 	}
+}
+
+func dishdeletemultiple(httpwriter http.ResponseWriter, req *http.Request) {
+
+	req.ParseForm()
+
+	// Get all selected records
+	dishselected := req.Form["dishes"]
+
+	var numrecsel = len(dishselected)
+
+	if numrecsel <= 0 {
+		http.Redirect(httpwriter, req, "/dishlist", 301)
+		return
+	}
+
+	dishtodelete := dishes.Dish{}
+
+	ret := helper.Resultado{}
+
+	for x := 0; x < len(dishselected); x++ {
+
+		dishtodelete.Name = dishselected[x]
+
+		ret = dishes.Dishdelete(mongodbvar, dishtodelete)
+	}
+
+	if ret.IsSuccessful == "Y" {
+		// http.ServeFile(httpwriter, req, "success.html")
+		http.Redirect(httpwriter, req, "/dishlist", 301)
+		return
+	}
+
+	http.Redirect(httpwriter, req, "/dishlist", 301)
+	return
+
 }
