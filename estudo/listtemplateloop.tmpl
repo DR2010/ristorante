@@ -1,0 +1,33 @@
+{{ define "listtemplateloop" }} 
+
+<table style="width:100%">
+    <tr>
+        {{range .FieldNames }}
+            <td><b>{{.}}</b></td>
+        {{end}}
+    </tr>
+    <tr>
+        <td>So name</td>
+        <td>Black Beans with Rice</td>
+        <td>50.00</td>
+        <td>50.00</td>
+    </tr>
+    <tr>
+        <td>Peixada</td>
+        <td>XX Black Peixe with Rice</td>
+        <td>50.00</td>
+        <td>50.00</td>
+    </tr>
+</table>
+
+<p></p>
+{{ . }}
+<p></p>
+<b>
+{{ .FieldNames }}
+
+{{range .FieldNames }}
+    {{.}}
+{{end}}
+
+{{end }}
