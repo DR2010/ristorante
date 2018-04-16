@@ -1,0 +1,786 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "v2",
+        "title": "PontinhoAPI"
+    },
+    "host": "pontinhoapi.azurewebsites.net:80",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/api/btcmarkets/getonly": {
+            "get": {
+                "tags": [
+                    "BtcMarkets"
+                ],
+                "operationId": "BtcMarkets_GetOnly",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/btcmarkets/getbyid": {
+            "get": {
+                "tags": [
+                    "BtcMarkets"
+                ],
+                "operationId": "BtcMarkets_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Card": {
+            "get": {
+                "tags": [
+                    "Card"
+                ],
+                "operationId": "Card_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Card"
+                            }
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Email/{id}": {
+            "get": {
+                "tags": [
+                    "Email"
+                ],
+                "operationId": "Email_Get",
+                "consumes": [],
+                "produces": [],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/game/getonlyx": {
+            "get": {
+                "tags": [
+                    "Game"
+                ],
+                "operationId": "Game_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/game/getbyid": {
+            "get": {
+                "tags": [
+                    "Game"
+                ],
+                "operationId": "Game_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/game/{gameid}/players": {
+            "get": {
+                "tags": [
+                    "Game"
+                ],
+                "operationId": "Game_GetListOfPlayers",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "gameid",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PlayerGame"
+                            }
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/game/{gameid}/cards": {
+            "get": {
+                "tags": [
+                    "Game"
+                ],
+                "operationId": "Game_GetListOfCards",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "gameid",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GameCards"
+                            }
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/game/{gameid}/player/{playergameid}/cards": {
+            "get": {
+                "tags": [
+                    "Game"
+                ],
+                "operationId": "Game_GetListOfPlayersCardsforaGame",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "gameid",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "name": "playergameid",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GameCards"
+                            }
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Game": {
+            "post": {
+                "tags": [
+                    "Game"
+                ],
+                "operationId": "Game_Post",
+                "consumes": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/gamecard/{gameid}/allocatecardtoplayers": {
+            "post": {
+                "tags": [
+                    "GameCard"
+                ],
+                "operationId": "GameCard_Post",
+                "consumes": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PlayerGame"
+                        }
+                    },
+                    {
+                        "name": "gameid",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CallResults"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Helper": {
+            "get": {
+                "tags": [
+                    "Helper"
+                ],
+                "operationId": "Helper_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Player": {
+            "get": {
+                "tags": [
+                    "Player"
+                ],
+                "operationId": "Player_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Player"
+                            }
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/PlayerGame/{id}": {
+            "get": {
+                "tags": [
+                    "PlayerGame"
+                ],
+                "operationId": "PlayerGame_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/PlayerGame"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/PlayerGame": {
+            "post": {
+                "tags": [
+                    "PlayerGame"
+                ],
+                "operationId": "PlayerGame_Post",
+                "consumes": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml",
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "playergame",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/PlayerGame"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CallResults"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/Suit": {
+            "get": {
+                "tags": [
+                    "Suit"
+                ],
+                "operationId": "Suit_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Suit"
+                            }
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/SuitCardColor": {
+            "get": {
+                "tags": [
+                    "SuitCardColor"
+                ],
+                "operationId": "SuitCardColor_Get",
+                "consumes": [],
+                "produces": [
+                    "application/json",
+                    "text/json",
+                    "text/html",
+                    "application/xml",
+                    "text/xml"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SuitCardColor"
+                            }
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {
+        "Object": {
+            "type": "object",
+            "properties": {}
+        },
+        "Card": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "CardID": {
+                    "type": "string"
+                },
+                "CardDescription": {
+                    "type": "string"
+                }
+            }
+        },
+        "Game": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "GameType": {
+                    "type": "string"
+                },
+                "Status": {
+                    "type": "string"
+                }
+            }
+        },
+        "PlayerGame": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "FKPlayerID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "Name": {
+                    "type": "string"
+                },
+                "FKGameID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "DateJoinedGame": {
+                    "format": "date-time",
+                    "type": "string"
+                },
+                "PlayerSequence": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "PlayersTurn": {
+                    "type": "string"
+                },
+                "PlayerList": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Player"
+                    }
+                }
+            }
+        },
+        "Player": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "PlayerName": {
+                    "type": "string"
+                },
+                "PlayerFullName": {
+                    "type": "string"
+                }
+            }
+        },
+        "GameCards": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "FKSuitCardColorID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "FKGameID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "CardIsWhere": {
+                    "type": "string"
+                },
+                "DiscardedSequence": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "CardLastDiscarded": {
+                    "type": "string"
+                },
+                "IsJoker": {
+                    "type": "string"
+                },
+                "CardIsWithPlayerID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "PlayerHandCardSequence": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "CardIsInPlayersGameID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "PlayerGameCardSequence": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "PlayerDrawFromPileSequence": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "INeedRequested": {
+                    "type": "string"
+                },
+                "CardImageLocation": {
+                    "type": "string"
+                },
+                "ImageName": {
+                    "type": "string"
+                }
+            }
+        },
+        "CallResults": {
+            "type": "object",
+            "properties": {
+                "ErrorID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "SuccessorFailure": {
+                    "type": "string"
+                },
+                "Results": {
+                    "type": "string"
+                },
+                "CreatedID": {
+                    "format": "int32",
+                    "type": "integer"
+                }
+            }
+        },
+        "Suit": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "SuitID": {
+                    "type": "string"
+                },
+                "SuitDescription": {
+                    "type": "string"
+                },
+                "PortugueseName": {
+                    "type": "string"
+                }
+            }
+        },
+        "SuitCardColor": {
+            "type": "object",
+            "properties": {
+                "ID": {
+                    "format": "int32",
+                    "type": "integer"
+                },
+                "SuitID": {
+                    "type": "string"
+                },
+                "CardID": {
+                    "type": "string"
+                },
+                "Color": {
+                    "type": "string"
+                },
+                "Sequence": {
+                    "type": "string"
+                },
+                "CardImage": {
+                    "type": "string"
+                },
+                "ImageName": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

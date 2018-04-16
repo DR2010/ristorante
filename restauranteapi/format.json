@@ -1,0 +1,24 @@
+{
+    "_id": ObjectId("5a70710d2a6d97d6326acfed"),
+    "userid": "Secretary@belnorth.org",
+    "name": "",
+    "password": "a7f07da18c5beac462a8d871cff6ba2a5a948628",
+    "passwordvalidate": "a7f07da18c5beac462a8d871cff6ba2a5a948628",
+    "applicationid": "Belnorth",
+    "status": "",
+    "jwt": "",
+    "claimset": [
+        {
+            "type": "USERTYPE",
+            "value": "ADMIN"
+        },
+        {
+            "type": "USERID",
+            "value": "Secretary@belnorth.org"
+        },
+        {
+            "type": "APPLICATIONID",
+            "value": "Belnorth"
+        }
+    ]
+}
