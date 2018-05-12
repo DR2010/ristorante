@@ -1,7 +1,4 @@
-// Package main is the main package
-// -------------------------------------
-// .../restauranteapi/restauranteapi.go
-// -------------------------------------
+// restauranteapi/restauranteapi.go
 package main
 
 import (

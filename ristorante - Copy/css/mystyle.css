@@ -1,0 +1,44 @@
+button {
+    color: #FFF;
+    background-color: #7c6d84;
+    font-size: 15px;
+    height: 40px;
+    border-radius: 4px;
+}
+
+myHero {
+    display: block;
+    background-color: #dddddd;
+    padding: 5px;
+    font-size: 15px;
+}
+
+#header {
+    width: 100%;
+    background-color: red;
+    height: 30px;
+}
+
+#container {
+    width: 300px;
+    background-color: #ffcc33;
+    margin: auto;
+}
+
+#first {
+    width: 300px;
+    float: left;
+    height: 300px;
+    background-color: blue;
+}
+
+#second {
+    width: 200px;
+    float: left;
+    height: 300px;
+    background-color: green;
+}
+
+#clear {
+    clear: both;
+}

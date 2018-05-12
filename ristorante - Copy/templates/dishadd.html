@@ -1,0 +1,35 @@
+ {{define "listtemplate"}}
+
+<h1>Add Dish</h1>
+<form method="POST" action="/dishadd">
+    <div>
+        <p/> <b>Dish Type:</b>
+        <p/>
+        <input type="text" name="dishtype">
+
+        <p/> <b>Dish Name:</b>
+        <p/>
+        <input type="text" name="dishname">
+
+        <p/> <b>Dish Price:</b>
+        <p/>
+        <input type="text" name="dishprice">
+
+        <p/> <b>Gluten Free:</b>
+        <p/>
+        <input type="text" name="dishglutenfree">
+
+        <p/> <b>Dairy Free:</b>
+        <p/>
+        <input type="text" name="dishdairyfree">
+
+        <p/> <b>Vegetarian:</b>
+        <p/>
+        <input type="text" name="dishvegetarian">
+        <p/>
+        <input type="submit" formaction="/dishadd" value="Submit">
+        <p/>
+    </div>
+</form>
+
+{{end}}

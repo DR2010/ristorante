@@ -1,1 +1,4 @@
 PATH=d:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin;C:\Program Files\Docker\Docker\Resources\bin;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\NVIDIA Corporation\PhysX\Common;C:\Program Files\Microsoft SQL Server\110\Tools\Binn\;C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.0\;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files (x86)\MySQL\MySQL Fabric 1.5.4 
+
+{ "_id" : ObjectId("5a70710d2a6d97d6326acfed"), "userid" : "Secretary@belnorth.org", "name" : "", "password" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "passwordvalidate" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "applicationid" : "Belnorth", "status" : "", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Secretary@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+

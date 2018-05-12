@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html  ng-app="myApp">
+    <head>
+        <meta id="meta" name="viewport" content="width=device-width, initial-scale=1.0" />
+        <script>
+            var sock = null;
+            var wsuri = "ws://127.0.0.1:1234/ws";
+            var id = 0;
+            // var clientlist = {};
+            var clientlist = [];
+
+            function establishwsconnection() {
+
+                console.log("onload");
+
+                sock = new WebSocket(wsuri);
+
+                sock.onopen = function() {
+                    console.log("connected to " + wsuri);
+                    var msg = document.getElementById('connectionstatus');
+                    msg.value = "Connected" + wsuri;
+
+                    sock.id = id++;
+                    clientlist[sock.id] =sock;
+
+                    // Call the server to get user ID for this connection
+                    // It would be a 15 chars unique ID generated and stored on server
+                    // ... (1) Call the server here
+                    // ... (2) Store the Client Unique ID in memory even if they don't logon
+                    // ... (3) Send with the message maybe
+                    //                          Somethink like: "User01029: Message"
+                }
+
+                sock.onclose = function(e) {
+                    console.log("connection closed (" + e.code + ")");
+                }
+
+                sock.onmessage = function(e) {
+                    console.log("message received: " + e.data + ' ');
+                    var msg = document.getElementById('messagereceived');
+                    msg.value = e.data ;
+                }
+            };
+
+            function send() {
+                var msg = document.getElementById('message').value;
+                sock.send(msg);
+                // var l = clientlist.length;
+                // for (x = 0; x < l; x++) {
+                //     clientlist[x].send(msg);
+                // }
+
+            };
+
+            function closeconnection() {
+                sock.close();
+                var msg = document.getElementById('connectionstatus');
+                    msg.value = "Not Connected";
+            };
+
+        </script>
+    </head>
+
+    <body ng-controller="tasksController">
+
+        <h1>WebSocket Echo Test</h1>
+        <form >
+            <p>
+                Message: <input id="message" type="text" value="Hello, world!">
+            </p>
+
+            <p>
+                Message Received: <input id="messagereceived" type="text" value="">
+            </p>
+            <p/>
+            <p/>
+            <p>
+                Connection Status: <input id="connectionstatus" type="text" value="Not connected">
+            </p>
+
+        </form>
+        <button onclick="establishwsconnection()">Establish Connection</button>
+        <button onclick="send()">Send Message</button>
+        <button onclick="closeconnection()">Close Connection</button>
+
+
+    </body>
+</html>

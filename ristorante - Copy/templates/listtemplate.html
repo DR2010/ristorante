@@ -1,0 +1,35 @@
+{{ define "listtemplate" }}
+<form action="Submit" method="POST" />
+<meta http-equiv="refresh" content="30">
+<h2>{{ .Info.Name }} </h2>
+<div style="float:left;" class="table-responsive">
+    <p>
+        <table class="table table-striped table-bordered">
+            <tr>
+                <th><b>#</b></th>
+                {{range .FieldNames }}
+                <th><b>{{.}}</b></th>
+                {{end}}
+            </tr>
+            {{range .Rows }}
+            <tr>
+                <td>
+                    <input type="checkbox" name="dishes" value="{{ index .Description 0 }}" unchecked>
+                </td>
+                {{range .Description }}
+                <td>{{.}}</td>
+                {{end}}
+            </tr>
+            {{end}}
+        </table>
+    </p>
+    <p/>
+    <div id="footer" class="navbar navbar-fixed-right">
+        {{if eq .Info.Name "Dish List" }}
+        <button type="submit" formaction="/dishadddisplay" value="Add">Add</button>
+        <button type="submit" formaction="/dishupdatedisplay" value="Update">Update</button>
+        <button type="submit" formaction="/dishdeletemultiple" value="Delete">Delete</button> {{end}}
+    </div>
+</div>
+</form>
+{{end}}
