@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/taskman.css" />
+    <link rel="stylesheet" type="text/css" href="css/mystyle.css" />
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,300,700" rel="stylesheet" type="text/css">
+
+</head>
+
+<body ng-controller="tasksController">
+    <div id="header" class="navbar navbar-left" id="navbar">
+        <a href="/" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Main Page</a>
+        <a href="/dishlist" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Dish list</a>
+        <a href="/orderlist" class="btn btn-md btn-success "> <i class="glyphicon glyphicon-book"></i>Order list</a>
+    </div>
+    <myHero>
+        <h2>Dan's Ristorante</h2>
+    </myHero>
+
+    <p/> {{ template "listtemplate" . }}
+
+    <script type="text/javascript" src="js/angular.min.js"></script>
+
+</body>
+
+</html>
