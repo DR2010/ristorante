@@ -1,6 +1,7 @@
 package orders
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	helper "restauranteapi/helper"
@@ -356,4 +357,45 @@ func Delete(redisclient *redis.Client, objtodeletekey string) helper.Resultado {
 	res.IsSuccessful = "Y"
 
 	return res
+}
+
+// SavetoMySQL will save the data from orders to MySQL
+func SavetoMySQL(objToCopy Order, db *sql.DB) {
+
+	// Created on 19/7/2018
+	// This program will save data to MySQL
+	// Call function to return all Orders from MongoDB
+	// for each order
+	// ... insert Order into MySQL
+	// ....for each order item
+	// ....... insert OrderItem into MySQL
+	// that's it
+
+	username := "Teste"
+
+	var user string
+
+	err := db.QueryRow("SELECT username FROM users WHERE username=?", username).Scan(&user)
+
+	switch {
+	case err == sql.ErrNoRows:
+
+		hashedPassword := "test"
+
+		_, err = db.Exec("INSERT INTO users(username, password) VALUES(?, ?)", username, hashedPassword)
+		if err != nil {
+			// http.Error(res, "Server error, unable to create your account.", 500)
+			return
+		}
+
+		// res.Write([]byte("User created!"))
+		return
+	case err != nil:
+		// http.Error(res, "Server error, unable to create your account.", 500)
+		return
+	default:
+		// http.Redirect(res, req, "/", 301)
+	}
+
+	return
 }
