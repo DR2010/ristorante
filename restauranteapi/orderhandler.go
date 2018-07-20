@@ -5,6 +5,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -533,6 +534,18 @@ func OrderListV2(httpwriter http.ResponseWriter, req *http.Request) {
 
 // CopyOrdersToMySQL also list orders
 func CopyOrdersToMySQL(httpwriter http.ResponseWriter, req *http.Request) {
+
+	db, err = sql.Open("mysql", "daniel:oculos18@/festajunina")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	err = db.Ping()
+	if err != nil {
+		panic(err.Error())
+	}
+
 	orders.SavetoMySQL(redisclient, db)
 }
 

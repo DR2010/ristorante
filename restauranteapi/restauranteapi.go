@@ -23,17 +23,6 @@ var err error
 //
 func main() {
 
-	db, err = sql.Open("mysql", "daniel:oculos18@/festajunina")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer db.Close()
-
-	err = db.Ping()
-	if err != nil {
-		panic(err.Error())
-	}
-
 	redisclient = redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",
 		Password: "", // no password set
