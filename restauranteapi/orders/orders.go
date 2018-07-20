@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	helper "restauranteapi/helper"
+	"strconv"
 
 	"github.com/go-redis/redis"
 
@@ -360,7 +361,7 @@ func Delete(redisclient *redis.Client, objtodeletekey string) helper.Resultado {
 }
 
 // SavetoMySQL will save the data from orders to MySQL
-func SavetoMySQL(objToCopy Order, db *sql.DB) {
+func SavetoMySQL(redisclient *redis.Client, db *sql.DB) {
 
 	// Created on 19/7/2018
 	// This program will save data to MySQL
@@ -371,31 +372,50 @@ func SavetoMySQL(objToCopy Order, db *sql.DB) {
 	// ....... insert OrderItem into MySQL
 	// that's it
 
-	username := "Teste"
+	statuscompleted := "Completed"
 
-	var user string
+	listoforders := Getallcompleted(redisclient, statuscompleted)
 
-	err := db.QueryRow("SELECT username FROM users WHERE username=?", username).Scan(&user)
+	for i := 0; i < len(listoforders); i++ {
 
-	switch {
-	case err == sql.ErrNoRows:
+		order := listoforders[i]
 
-		hashedPassword := "test"
+		number, _ := strconv.Atoi(order.ID)
+		fullname := order.ClientName
+		date := order.Date
+		ttime := order.Time
+		status := order.Status
+		total, _ := strconv.ParseFloat(order.TotalGeral, 64)
 
-		_, err = db.Exec("INSERT INTO users(username, password) VALUES(?, ?)", username, hashedPassword)
+		_, err := db.Exec("INSERT INTO festajunina.order(number, status, fullname, total, date, time) VALUES(?,?,?,?,?,?)", number, status, fullname, total, date, ttime)
+
 		if err != nil {
 			// http.Error(res, "Server error, unable to create your account.", 500)
 			return
 		}
 
-		// res.Write([]byte("User created!"))
-		return
-	case err != nil:
-		// http.Error(res, "Server error, unable to create your account.", 500)
-		return
-	default:
-		// http.Redirect(res, req, "/", 301)
-	}
+		numitem := 0
+		for p := 0; p < len(order.Items); p++ {
 
+			numitem++
+			orderitem := order.Items[p]
+
+			fkordernumber, _ := strconv.Atoi(order.ID)
+			sequencenumber := numitem // made up value
+			dishname := orderitem.PratoName
+			total, _ := strconv.ParseFloat(orderitem.Total, 64)
+			price, _ := strconv.ParseFloat(orderitem.Price, 64)
+			quantidade, _ := strconv.Atoi(orderitem.Quantidade)
+
+			_, err := db.Exec("INSERT INTO festajunina.orderitem(fkordernumber, sequencenumber, dishname, quantity, price, total) VALUES(?,?,?,?,?,?)", fkordernumber, sequencenumber, dishname, quantidade, price, total)
+
+			if err != nil {
+				// http.Error(res, "Server error, unable to create your account.", 500)
+				return
+			}
+
+		}
+
+	}
 	return
 }

@@ -66,6 +66,7 @@ var routes = Routes{
 	Route{"dishalsolist", "GET", "/dishalsolist", Hdishalsolist},
 	Route{"getcachedvalues", "GET", "/getcachedvalues", getcachedvalues},
 	Route{"orderlist", "GET", "/orderlist", OrderListV2},
+	Route{"savetomysql", "GET", "/savetomysql", CopyOrdersToMySQL},
 	Route{"ordercompleted", "GET", "/ordercompleted", ordercompleted},
 	Route{"orderstatus", "GET", "/orderstatus", orderstatus},
 	Route{"orderadd", "POST", "/orderadd", Horderadd},

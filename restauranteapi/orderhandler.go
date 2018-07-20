@@ -531,6 +531,11 @@ func OrderListV2(httpwriter http.ResponseWriter, req *http.Request) {
 	// json.NewEncoder(httpwriter).Encode(&orderlist)
 }
 
+// CopyOrdersToMySQL also list orders
+func CopyOrdersToMySQL(httpwriter http.ResponseWriter, req *http.Request) {
+	orders.SavetoMySQL(redisclient, db)
+}
+
 // ordercompleted also list orders
 func ordercompleted(httpwriter http.ResponseWriter, req *http.Request) {
 
