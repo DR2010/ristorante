@@ -1,6 +1,6 @@
 // Package models is a dish for packages
 // -------------------------------------
-// .../restauranteapi/dishes/dishes.go
+// .../restauranteapi/models/dishes.go
 // -------------------------------------
 package models
 

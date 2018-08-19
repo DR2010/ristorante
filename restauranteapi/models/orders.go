@@ -1,3 +1,7 @@
+// Package models is a orders for packages
+// -------------------------------------
+// .../restauranteapi/models/orders.go
+// -------------------------------------
 package models
 
 import (
@@ -14,6 +18,7 @@ type Order struct {
 	Date             string        // Order Date
 	Time             string        // Order Time
 	Status           string        // Open, Completed, Cancelled
+	EventID          string        // Every order belongs to an Event (Events are linked to Organisation)
 	TimeStartServing string        // Open, Completed, Cancelled
 	TimePlaced       string        // Open, Completed, Cancelled
 	TimeCompleted    string        // Open, Completed, Cancelled

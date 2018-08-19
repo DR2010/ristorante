@@ -200,17 +200,18 @@ func HAPIorderadd(httpwriter http.ResponseWriter, req *http.Request) {
 	// Generate order ID
 	objtoaction.ID = GenerateNewOrderID()
 
-	// Create the user
-	//
-	credentials := security.Credentials{}
-	credentials.UserID = objtoaction.ClientID
-	credentials.ApplicationID = "Restaurante"
-	credentials.Name = objtoaction.ClientName
-	credentials.Password = "NA"
-	credentials.IsAdmin = "N"
-
 	// If user ID is passed in, just use it
 	if objtoaction.ClientID == "Anonymous" || objtoaction.ClientID == "" {
+
+		// Create the user
+		//
+		credentials := security.Credentials{}
+		credentials.UserID = objtoaction.ClientID
+		credentials.ApplicationID = "Restaurante"
+		credentials.Name = objtoaction.ClientName
+		credentials.Password = "NA"
+		credentials.IsAdmin = "N"
+
 		// Generate user ID
 		objtoaction.ClientID = GenerateNewUser()
 		credentials.UserID = objtoaction.ClientID
