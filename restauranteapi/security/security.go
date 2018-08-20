@@ -116,6 +116,35 @@ func Find(redisclient *redis.Client, userid string) (Credentials, string) {
 	return result[0], "200 OK"
 }
 
+// UsersGetAll is to find stuff
+func UsersGetAll(redisclient *redis.Client, userid string) []Credentials {
+
+	database := new(helper.DatabaseX)
+	database.Collection = "security"
+	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
+	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
+
+	session, err := mgo.Dial(database.Location)
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB(database.Database).C(database.Collection)
+
+	var results []Credentials
+
+	err1 := c.Find(nil).All(&results)
+	if err1 != nil {
+		log.Fatal(err1)
+	}
+
+	return results
+}
+
 // Userupdate is
 func Userupdate(redisclient *redis.Client, userUpdate Credentials) helper.Resultado {
 

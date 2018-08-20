@@ -16,4 +16,6 @@ type Event struct {
 	Description string        // Description of the event
 	Location    string        // Location of the event
 	Date        string        // Event Date
+	Manager     string        // Event Manager
+	Mobile      string        // Manager mobile phone
 }

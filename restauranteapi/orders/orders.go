@@ -205,6 +205,50 @@ func GetallbyUser(redisclient *redis.Client, userid string) []Order {
 	return nil
 }
 
+// GetallbyOrderName works
+func GetallbyOrderName(redisclient *redis.Client, ordername string) []Order {
+	// ---------------------------
+	// Show all order for a client
+	// It will help to show the total to pay later
+	// ---------------------------
+	database := new(helper.DatabaseX)
+
+	database.Collection = "orders"
+
+	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
+	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
+
+	fmt.Println("database.Location")
+	fmt.Println(database.Location)
+
+	session, err := mgo.Dial(database.Location)
+
+	if err != nil {
+		panic(err)
+	}
+	defer session.Close()
+
+	// Optional. Switch the session to a monotonic behavior.
+	session.SetMode(mgo.Monotonic, true)
+
+	c := session.DB(database.Database).C(database.Collection)
+
+	var results []Order
+
+	err = c.Find(bson.M{"ClientName": ordername}).All(&results)
+	if err != nil {
+		// TODO: Do something about the error
+	} else {
+		return results
+	}
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return nil
+}
+
 // Getallcompleted works
 func Getallcompleted(redisclient *redis.Client, status string) []Order {
 

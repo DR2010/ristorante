@@ -47,6 +47,8 @@ func Heventadd(httpwriter http.ResponseWriter, req *http.Request) {
 	eventtoadd.Description = req.FormValue("eventdescription")
 	eventtoadd.Location = req.FormValue("eventlocation")
 	eventtoadd.Date = req.FormValue("eventdate")
+	eventtoadd.Manager = req.FormValue("eventmanager")
+	eventtoadd.Mobile = req.FormValue("eventmobile")
 
 	_, recordstatus := dishesmethods.Find(redisclient, eventtoadd.Name)
 	if recordstatus == "200 OK" {
@@ -55,7 +57,7 @@ func Heventadd(httpwriter http.ResponseWriter, req *http.Request) {
 
 		fmt.Println("recordstatus")
 		fmt.Println(recordstatus)
-		http.Error(httpwriter, "Record already exists.", 422)
+		http.Error(httpwriter, "Event alread registered.", 422)
 		return
 	}
 
@@ -127,7 +129,7 @@ func Heventalsolist(httpwriter http.ResponseWriter, req *http.Request) {
 // Heventlist is a function to return a list of dishes
 func Heventlist(httpwriter http.ResponseWriter, req *http.Request) {
 
-	var dishlist = dishesmethods.Getall(redisclient)
+	var dishlist = eventsmethods.Getall(redisclient)
 
 	json.NewEncoder(httpwriter).Encode(&dishlist)
 }

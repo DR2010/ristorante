@@ -21,7 +21,7 @@ import (
 func Dishadd(redisclient *redis.Client, dishInsert dishes.Dish) helper.Resultado {
 
 	database := new(helper.DatabaseX)
-	database.Collection = "dishes"
+	database.Collection, _ = redisclient.Get("CollectionDishes").Result()
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
 
@@ -54,7 +54,7 @@ func Dishadd(redisclient *redis.Client, dishInsert dishes.Dish) helper.Resultado
 func Find(redisclient *redis.Client, dishFind string) (dishes.Dish, string) {
 
 	database := new(helper.DatabaseX)
-	database.Collection = "dishes"
+	database.Collection, _ = redisclient.Get("CollectionDishes").Result()
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
 
@@ -92,8 +92,7 @@ func Getall(redisclient *redis.Client) []dishes.Dish {
 
 	database := new(helper.DatabaseX)
 
-	database.Collection = "dishes"
-
+	database.Collection, _ = redisclient.Get("CollectionDishes").Result()
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
 
@@ -136,8 +135,7 @@ func GetAvailable(redisclient *redis.Client) []dishes.Dish {
 
 	database := new(helper.DatabaseX)
 
-	database.Collection = "dishes"
-
+	database.Collection, _ = redisclient.Get("CollectionDishes").Result()
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
 
@@ -180,7 +178,7 @@ func GetAvailable(redisclient *redis.Client) []dishes.Dish {
 func Dishupdate(redisclient *redis.Client, dishUpdate dishes.Dish) helper.Resultado {
 
 	database := new(helper.DatabaseX)
-	database.Collection = "dishes"
+	database.Collection, _ = redisclient.Get("CollectionDishes").Result()
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
 
@@ -213,10 +211,9 @@ func Dishupdate(redisclient *redis.Client, dishUpdate dishes.Dish) helper.Result
 func Dishdelete(redisclient *redis.Client, dishDelete dishes.Dish) helper.Resultado {
 
 	database := new(helper.DatabaseX)
-	database.Collection = "dishes"
+	database.Collection, _ = redisclient.Get("CollectionDishes").Result()
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
-	database.Collection = "dishes"
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {

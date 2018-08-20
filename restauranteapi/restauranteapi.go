@@ -81,6 +81,10 @@ func loadreferencedatainredis() {
 	err = redisclient.Set("API.APIServer.Port", variable.APIAPIServerPort, 0).Err()
 	err = redisclient.Set("API.APIServer.IPAddress", variable.APIAPIServerIPAddress, 0).Err()
 	err = redisclient.Set("Web.Debug", variable.WEBDebug, 0).Err()
+	err = redisclient.Set("CollectionOrders", variable.CollectionOrders, 0).Err()
+	err = redisclient.Set("CollectionSecurity", variable.CollectionSecurity, 0).Err()
+	err = redisclient.Set("CollectionDishes", variable.CollectionDishes, 0).Err()
+	err = redisclient.Set("CollectionEvents", variable.CollectionEvents, 0).Err()
 
 }
 

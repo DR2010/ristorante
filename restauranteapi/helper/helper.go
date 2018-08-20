@@ -47,6 +47,10 @@ type RestEnvVariables struct {
 	APIAPIServerPort      string // collection name
 	APIAPIServerIPAddress string // apiserver name
 	WEBDebug              string // debug
+	CollectionOrders      string // Collection Names
+	CollectionSecurity    string // Collection Names
+	CollectionDishes      string // Collection Names
+	CollectionEvents      string // Collection Names
 }
 
 // Readfileintostruct is

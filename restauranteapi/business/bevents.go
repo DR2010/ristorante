@@ -177,7 +177,7 @@ func GetAvailable(redisclient *redis.Client) []events.Event {
 func EventUpdate(redisclient *redis.Client, eventUpdate events.Event) helper.Resultado {
 
 	database := new(helper.DatabaseX)
-	database.Collection = "dishes"
+	database.Collection = "events"
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
 
@@ -210,10 +210,9 @@ func EventUpdate(redisclient *redis.Client, eventUpdate events.Event) helper.Res
 func EventDelete(redisclient *redis.Client, eventDelete events.Event) helper.Resultado {
 
 	database := new(helper.DatabaseX)
-	database.Collection = "dishes"
+	database.Collection = "events"
 	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
 	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
-	database.Collection = "dishes"
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
