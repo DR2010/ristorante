@@ -53,6 +53,7 @@ type RestEnvVariables struct {
 	CollectionSecurity    string // Collection Names
 	CollectionDishes      string // Collection Names
 	CollectionEvents      string // Collection Names
+	SYSID                 string // Collection Names
 }
 
 // Readfileintostruct is
@@ -66,6 +67,20 @@ func Readfileintostruct() RestEnvVariables {
 	json.Unmarshal(dat, &restenv)
 
 	return restenv
+}
+
+// GetSYSID is just returning the System ID directly from file
+// It is happening to enable multiple usage of Redis Keys ("SYSID" + "APIURL" for instance)
+func GetSYSID() string {
+	dat, err := ioutil.ReadFile("fjapisecurity.ini")
+	check(err)
+	fmt.Print(string(dat))
+
+	var restenv RestEnvVariables
+
+	json.Unmarshal(dat, &restenv)
+
+	return restenv.SYSID
 }
 
 func check(e error) {

@@ -44,12 +44,12 @@ type Claim struct {
 }
 
 // Useradd is for export
-func Useradd(redisclient *redis.Client, userInsert Credentials) helper.Resultado {
+func Useradd(sysid string, redisclient *redis.Client, userInsert Credentials) helper.Resultado {
 
 	database := new(helper.DatabaseX)
 	database.Collection = "security"
-	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
+	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
+	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
@@ -84,12 +84,12 @@ func Useradd(redisclient *redis.Client, userInsert Credentials) helper.Resultado
 }
 
 // Find is to find stuff
-func Find(redisclient *redis.Client, userid string) (Credentials, string) {
+func Find(sysid string, redisclient *redis.Client, userid string) (Credentials, string) {
 
 	database := new(helper.DatabaseX)
 	database.Collection = "security"
-	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
+	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
+	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
 
 	log.Println("Looking for " + userid)
 	log.Println("...on DB: " + database.Database)
@@ -121,16 +121,18 @@ func Find(redisclient *redis.Client, userid string) (Credentials, string) {
 		return dishnull, "404 Not found"
 	}
 
+	log.Println("...ApplicationID: " + result[0].ApplicationID)
+
 	return result[0], "200 OK"
 }
 
 // UsersGetAll is to find stuff
-func UsersGetAll(redisclient *redis.Client, userid string) []Credentials {
+func UsersGetAll(sysid string, redisclient *redis.Client, userid string) []Credentials {
 
 	database := new(helper.DatabaseX)
 	database.Collection = "security"
-	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
+	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
+	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
@@ -154,12 +156,12 @@ func UsersGetAll(redisclient *redis.Client, userid string) []Credentials {
 }
 
 // Userupdate is
-func Userupdate(redisclient *redis.Client, userUpdate Credentials) helper.Resultado {
+func Userupdate(sysid string, redisclient *redis.Client, userUpdate Credentials) helper.Resultado {
 
 	database := new(helper.DatabaseX)
 	database.Collection = "security"
-	database.Database, _ = redisclient.Get("API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get("API.MongoDB.Location").Result()
+	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
+	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
@@ -192,10 +194,10 @@ func Userupdate(redisclient *redis.Client, userUpdate Credentials) helper.Result
 }
 
 // ValidateUserCredentials is to find stuff
-func ValidateUserCredentials(redisclient *redis.Client, userid string, password string) (string, string) {
+func ValidateUserCredentials(sysid string, redisclient *redis.Client, userid string, password string) (string, string) {
 
 	// look for user
-	var us, _ = Find(redisclient, userid)
+	var us, _ = Find(sysid, redisclient, userid)
 
 	var passwordhashed = Hashstring(password)
 
@@ -208,7 +210,7 @@ func ValidateUserCredentials(redisclient *redis.Client, userid string, password 
 }
 
 // ValidateUserCredentialsV2 is to find stuff
-func ValidateUserCredentialsV2(redisclient *redis.Client, userid string, password string) (Credentials, string) {
+func ValidateUserCredentialsV2(sysid string, redisclient *redis.Client, userid string, password string) (Credentials, string) {
 
 	var usercredentials Credentials
 	usercredentials.UserID = userid
@@ -217,7 +219,7 @@ func ValidateUserCredentialsV2(redisclient *redis.Client, userid string, passwor
 	usercredentials.Status = "Error"
 
 	// look for user
-	var userdatabase, _ = Find(redisclient, userid)
+	var userdatabase, _ = Find(sysid, redisclient, userid)
 
 	var passwordhashed = Hashstring(password)
 
