@@ -1,16 +1,16 @@
 package helper
 
 import (
-	"bufio"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
-	"os"
-	"strings"
 
 	"github.com/go-redis/redis"
 )
+
+var redisclient *redis.Client
+var SYSID string
+var databaseEV DatabaseX
 
 // DatabaseX is a struct
 type DatabaseX struct {
@@ -28,13 +28,17 @@ type Resultado struct {
 }
 
 // GetRedisPointer returns
-func GetRedisPointer() *redis.Client {
+func GetRedisPointer(bucket int) *redis.Client {
 
-	redisclient := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
-	})
+	bucket = 0
+
+	if redisclient == nil {
+		redisclient = redis.NewClient(&redis.Options{
+			Addr:     "localhost:6379",
+			Password: "",     // no password set
+			DB:       bucket, // use default DB
+		})
+	}
 
 	return redisclient
 }
@@ -72,15 +76,24 @@ func Readfileintostruct() RestEnvVariables {
 // GetSYSID is just returning the System ID directly from file
 // It is happening to enable multiple usage of Redis Keys ("SYSID" + "APIURL" for instance)
 func GetSYSID() string {
-	dat, err := ioutil.ReadFile("fjapisecurity.ini")
-	check(err)
-	fmt.Print(string(dat))
 
-	var restenv RestEnvVariables
+	if SYSID == "" {
 
-	json.Unmarshal(dat, &restenv)
+		dat, err := ioutil.ReadFile("fjapisecurity.ini")
+		check(err)
+		fmt.Print(string(dat))
 
-	return restenv.SYSID
+		var restenv RestEnvVariables
+
+		json.Unmarshal(dat, &restenv)
+
+		SYSID = restenv.SYSID
+
+		return restenv.SYSID
+	}
+
+	return SYSID
+
 }
 
 func check(e error) {
@@ -96,42 +109,28 @@ type PlayerRegistrationFile struct {
 	DOB  string
 }
 
-// Capitalfootball is
-func Capitalfootball(redisclient *redis.Client) []PlayerRegistrationFile {
+// Getvaluefromcache returns the value of a key from cache
+func Getvaluefromcache(key string) string {
 
-	file, err := os.Open("capitalfootball.txt")
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
+	// bucket is ZERO for now
+	// I am allowing it to be setup now
+	rp := GetRedisPointer(0)
 
-	var playerlist []PlayerRegistrationFile
+	sysid := GetSYSID()
 
-	scanner := bufio.NewScanner(file)
+	valuetoreturn, _ := rp.Get(sysid + key).Result()
 
-	playerlist = make([]PlayerRegistrationFile, 52)
+	return valuetoreturn
+}
 
-	i := 0
-	for scanner.Scan() {
-		line := scanner.Text()
-		fmt.Println(scanner.Text())
+// GetDBParmFromCache returns the value of a key from cache
+func GetDBParmFromCache(collection string) *DatabaseX {
 
-		tmp := strings.Split(line, ",")
+	database := new(DatabaseX)
 
-		i++
-		playerlist[i] = PlayerRegistrationFile{}
-		playerlist[i].FFA = strings.Trim(tmp[0], " ")
-		playerlist[i].Name = strings.Trim(tmp[1], " ")
-		playerlist[i].DOB = strings.Trim(tmp[2], " ")
+	database.Collection = Getvaluefromcache(collection)
+	database.Database = Getvaluefromcache("API.MongoDB.Database")
+	database.Location = Getvaluefromcache("API.MongoDB.Location")
 
-		fmt.Println(playerlist[i].FFA)
-
-		err = redisclient.Set(playerlist[i].FFA, playerlist[i].Name, 0).Err()
-	}
-
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
-
-	return playerlist
+	return database
 }

@@ -39,9 +39,9 @@ func main() {
 
 	loadreferencedatainredis()
 
-	ThisAPIPort, _ := redisclient.Get(sysid + "ThisAPIPort").Result()
-	MongoDBLocation, _ := redisclient.Get(sysid + "API.MongoDB.Location").Result()
-	MongoDBDatabase, _ := redisclient.Get(sysid + "API.MongoDB.Database").Result()
+	ThisAPIPort := helper.Getvaluefromcache("ThisAPIPort")
+	MongoDBLocation := helper.Getvaluefromcache("API.MongoDB.Location")
+	MongoDBDatabase := helper.Getvaluefromcache("API.MongoDB.Database")
 
 	mongodbvar.Location = MongoDBLocation
 	mongodbvar.Database = MongoDBDatabase
@@ -102,11 +102,11 @@ func getcachedvalues(httpwriter http.ResponseWriter, req *http.Request) {
 
 	var rv = new(rediscachevalues)
 
-	rv.MongoDBLocation, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
-	rv.MongoDBDatabase, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
-	rv.APIServerPort, _ = redisclient.Get(sysid + "API.APIServer.Port").Result()
-	rv.APIServerIP, _ = redisclient.Get(sysid + "API.APIServer.IPAddress").Result()
-	rv.WebDebug, _ = redisclient.Get(sysid + "Web.Debug").Result()
+	rv.MongoDBLocation = helper.Getvaluefromcache("API.MongoDB.Location")
+	rv.MongoDBDatabase = helper.Getvaluefromcache("API.MongoDB.Database")
+	rv.APIServerPort = helper.Getvaluefromcache("API.APIServer.Port")
+	rv.APIServerIP = helper.Getvaluefromcache("API.APIServer.IPAddress")
+	rv.WebDebug = helper.Getvaluefromcache("Web.Debug")
 
 	keys := make([]Cache, 5)
 	keys[0].Key = "API.MongoDB.Location"

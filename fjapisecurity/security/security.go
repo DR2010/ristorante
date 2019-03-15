@@ -46,10 +46,7 @@ type Claim struct {
 // Useradd is for export
 func Useradd(sysid string, redisclient *redis.Client, userInsert Credentials) helper.Resultado {
 
-	database := new(helper.DatabaseX)
-	database.Collection = "security"
-	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
+	database := helper.GetDBParmFromCache("CollectionSecurity")
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
@@ -86,10 +83,7 @@ func Useradd(sysid string, redisclient *redis.Client, userInsert Credentials) he
 // Find is to find stuff
 func Find(sysid string, redisclient *redis.Client, userid string) (Credentials, string) {
 
-	database := new(helper.DatabaseX)
-	database.Collection = "security"
-	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
+	database := helper.GetDBParmFromCache("CollectionSecurity")
 
 	log.Println("Looking for " + userid)
 	log.Println("...on DB: " + database.Database)
@@ -129,10 +123,7 @@ func Find(sysid string, redisclient *redis.Client, userid string) (Credentials, 
 // UsersGetAll is to find stuff
 func UsersGetAll(sysid string, redisclient *redis.Client, userid string) []Credentials {
 
-	database := new(helper.DatabaseX)
-	database.Collection = "security"
-	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
+	database := helper.GetDBParmFromCache("CollectionSecurity")
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
@@ -158,10 +149,7 @@ func UsersGetAll(sysid string, redisclient *redis.Client, userid string) []Crede
 // Userupdate is
 func Userupdate(sysid string, redisclient *redis.Client, userUpdate Credentials) helper.Resultado {
 
-	database := new(helper.DatabaseX)
-	database.Collection = "security"
-	database.Database, _ = redisclient.Get(sysid + "API.MongoDB.Database").Result()
-	database.Location, _ = redisclient.Get(sysid + "API.MongoDB.Location").Result()
+	database := helper.GetDBParmFromCache("CollectionSecurity")
 
 	session, err := mgo.Dial(database.Location)
 	if err != nil {
