@@ -81,7 +81,7 @@ func Useradd(sysid string, redisclient *redis.Client, userInsert Credentials) he
 }
 
 // Find is to find stuff
-func Find(sysid string, redisclient *redis.Client, userid string) (Credentials, string) {
+func Find(userid string) (Credentials, string) {
 
 	database := helper.GetDBParmFromCache("CollectionSecurity")
 
@@ -120,8 +120,8 @@ func Find(sysid string, redisclient *redis.Client, userid string) (Credentials, 
 	return result[0], "200 OK"
 }
 
-// UsersGetAll is to find stuff
-func UsersGetAll(sysid string, redisclient *redis.Client, userid string) []Credentials {
+// UsersGetAll is to retrieve all users
+func UsersGetAll() ([]Credentials, string) {
 
 	database := helper.GetDBParmFromCache("CollectionSecurity")
 
@@ -143,11 +143,12 @@ func UsersGetAll(sysid string, redisclient *redis.Client, userid string) []Crede
 		log.Fatal(err1)
 	}
 
-	return results
+	return results, "200 OK"
+
 }
 
 // Userupdate is
-func Userupdate(sysid string, redisclient *redis.Client, userUpdate Credentials) helper.Resultado {
+func Userupdate(userUpdate Credentials) helper.Resultado {
 
 	database := helper.GetDBParmFromCache("CollectionSecurity")
 
@@ -182,10 +183,10 @@ func Userupdate(sysid string, redisclient *redis.Client, userUpdate Credentials)
 }
 
 // ValidateUserCredentials is to find stuff
-func ValidateUserCredentials(sysid string, redisclient *redis.Client, userid string, password string) (string, string) {
+func ValidateUserCredentials(userid string, password string) (string, string) {
 
 	// look for user
-	var us, _ = Find(sysid, redisclient, userid)
+	var us, _ = Find(userid)
 
 	var passwordhashed = Hashstring(password)
 
@@ -198,7 +199,7 @@ func ValidateUserCredentials(sysid string, redisclient *redis.Client, userid str
 }
 
 // ValidateUserCredentialsV2 is to find stuff
-func ValidateUserCredentialsV2(sysid string, redisclient *redis.Client, userid string, password string) (Credentials, string) {
+func ValidateUserCredentialsV2(userid string, password string) (Credentials, string) {
 
 	var usercredentials Credentials
 	usercredentials.UserID = userid
@@ -207,7 +208,7 @@ func ValidateUserCredentialsV2(sysid string, redisclient *redis.Client, userid s
 	usercredentials.Status = "Error"
 
 	// look for user
-	var userdatabase, _ = Find(sysid, redisclient, userid)
+	var userdatabase, _ = Find(userid)
 
 	var passwordhashed = Hashstring(password)
 

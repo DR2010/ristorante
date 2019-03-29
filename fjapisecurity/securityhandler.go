@@ -27,7 +27,7 @@ func Hsecuritylogin(httpwriter http.ResponseWriter, req *http.Request) {
 	// cotacaotoadd.Currency = params.Get("Currency")
 	// cotacaotoadd.Balance = params.Get("Balance")
 
-	token, _ := security.ValidateUserCredentials(sysid, redisclient, userid, password)
+	token, _ := security.ValidateUserCredentials(userid, password)
 
 	if token == "Error" {
 		httpwriter.WriteHeader(http.StatusInternalServerError)
@@ -56,7 +56,7 @@ func HsecurityloginV2(httpwriter http.ResponseWriter, req *http.Request) {
 	// cotacaotoadd.Currency = params.Get("Currency")
 	// cotacaotoadd.Balance = params.Get("Balance")
 
-	credentialwithtoken, _ := security.ValidateUserCredentialsV2(sysid, redisclient, userid, password)
+	credentialwithtoken, _ := security.ValidateUserCredentialsV2(userid, password)
 
 	if credentialwithtoken.JWT == "Error" {
 		httpwriter.WriteHeader(http.StatusInternalServerError)
@@ -89,7 +89,7 @@ func Hsecuritysignup(httpwriter http.ResponseWriter, req *http.Request) {
 	userInsert.ClaimSet[2].Value = req.FormValue("applicationid")
 
 	token := ""
-	_, resfind := security.Find(sysid, redisclient, userInsert.UserID)
+	_, resfind := security.Find(userInsert.UserID)
 	if resfind == "200 OK" {
 		token = "User already exists"
 
@@ -189,7 +189,7 @@ func HchangePassword(httpwriter http.ResponseWriter, req *http.Request) {
 
 	// Update Password
 
-	usercredentials, resfind := security.Find(sysid, redisclient, credentials.UserID)
+	usercredentials, resfind := security.Find(credentials.UserID)
 	if resfind == "200 OK" {
 		// User exists
 		// Update password
@@ -197,7 +197,7 @@ func HchangePassword(httpwriter http.ResponseWriter, req *http.Request) {
 		usercredentials.Password = security.Hashstring(objtoaction.NewPassword)
 		usercredentials.PasswordValidate = security.Hashstring(objtoaction.RetypePassword)
 
-		resultado := security.Userupdate(sysid, redisclient, usercredentials)
+		resultado := security.Userupdate(usercredentials)
 		if resultado.IsSuccessful == "Y" {
 			log.Println("All good, in theory.")
 			finalres = "Password has been updated."
@@ -233,7 +233,7 @@ func HgetUserDetails(httpwriter http.ResponseWriter, req *http.Request) {
 	credentials := security.Credentials{}
 	credentials.UserID = strings.ToUpper(objtoaction.Email)
 
-	usercredentials, resfind := security.Find(sysid, redisclient, credentials.UserID)
+	usercredentials, resfind := security.Find(credentials.UserID)
 	if resfind == "200 OK" {
 		// All good
 	} else {
@@ -257,6 +257,39 @@ func HgetUserDetails(httpwriter http.ResponseWriter, req *http.Request) {
 	}
 	log.Println("isadmin: " + usercredentials.IsAdmin)
 	log.Println("status: " + usercredentials.Status)
+
+	json.NewEncoder(httpwriter).Encode(&usercredentials)
+	return
+
+}
+
+// HlistAllUsers retrieve user details
+func HlistAllUsers(httpwriter http.ResponseWriter, req *http.Request) {
+
+	defer req.Body.Close()
+	bodybyte, _ := ioutil.ReadAll(req.Body)
+
+	type dcUserDetails struct {
+		Email         string // User ID/ Email
+		IsAdmin       string //
+		ApplicationID string //
+		Status        string //
+		UserType      string //
+	}
+
+	var objtoaction dcUserDetails
+	err = json.Unmarshal(bodybyte, &objtoaction)
+
+	credentials := security.Credentials{}
+	credentials.UserID = strings.ToUpper(objtoaction.Email)
+
+	usercredentials, resfind := security.UsersGetAll()
+	if resfind == "200 OK" {
+		// All good
+	} else {
+		// usercredentials.ApplicationID = "User Not found"
+		return
+	}
 
 	json.NewEncoder(httpwriter).Encode(&usercredentials)
 	return
@@ -290,7 +323,7 @@ func HupdateUserDetails(httpwriter http.ResponseWriter, req *http.Request) {
 
 	// Update Password
 
-	usercredentials, resfind := security.Find(sysid, redisclient, credentials.UserID)
+	usercredentials, resfind := security.Find(credentials.UserID)
 	if resfind == "200 OK" {
 		// User exists
 		// Update password
@@ -302,7 +335,7 @@ func HupdateUserDetails(httpwriter http.ResponseWriter, req *http.Request) {
 		usercredentials.ClaimSet[0].Type = "USERTYPE"
 		usercredentials.ClaimSet[0].Value = objtoaction.UserType
 
-		resultado := security.Userupdate(sysid, redisclient, usercredentials)
+		resultado := security.Userupdate(usercredentials)
 		if resultado.IsSuccessful == "Y" {
 			log.Println("All good, in theory.")
 			finalres = "Details have been updated."
