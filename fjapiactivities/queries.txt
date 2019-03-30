@@ -1,0 +1,282 @@
+
+sudo systemctl stop fjapidishes.service
+sudo systemctl start fjapidishes.service
+sudo systemctl status fjapidishes.service
+
+// Enable services
+sudo systemctl enable fjapidishes.service
+sudo systemctl disable fjapidishes.service
+
+// Running processes
+
+ps -ef | grep fj
+ps -ef | grep festa
+
+// O script que foi criado no windows nao funcionou, pode ser que seja esta explicacao
+// ---> I used windows and putty to write script, so I had \r\n at the end of lines. Be sure, you have only \n symbol.
+// Entao criei um do zero no ubuntu e funcionou
+// Tem que fazer o script executavel
+chmod +x ~/deployubu.sh
+
+
+// List Containers
+//
+docker ps
+
+// Build the container
+//
+docker build -t contfjapidishes .
+
+// Run the container
+//
+docker run --add-host="localhost:10.0.0.4" -p 1611:1610 contfjapidishes
+
+// Stop a docker container
+docker stop 295add603714
+docker rm 295add603714
+docker rm upbeat_kalam
+docker rm eloquent_aryabhata
+
+mkdir ~/data (under home/daniel) < Created to host mongo image / docker
+sudo docker run -d -p 27015:27015 -v ~/data:/data/db mongo
+sudo docker run -d -p 6378:6379 -v ~/data:/data/db mongo
+----------------------^ container port
+---------------------------^ external port
+
+
+docker run --name danmongo -d mongo:1.6
+
+docker run -it contfjapidishes
+
+--network="host"
+
+
+-----------------------------------------------------------------------------------------------------------------------
+{ "_id" : ObjectId("5a6d6c4c2a6d97d6326a9003"), "userid" : "DanielRest", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Restaurante", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "DanielRest" }, { "type" : "APPLICATIONID", "value" : "Restaurante" } ] }
+-----------------------------------------------------------------------------------------------------------------------
+db.security.replaceOne(
+   { "_id" : ObjectId("5a7f7b65be49ce7f054911ac") },
+{ "_id" : ObjectId("5a7f7b65be49ce7f054911ac"), "userid" : "FESTA@FESTA.COM", "name" : "Daniel Festa", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Restaurante", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "BASIC" }, { "type" : "USERID", "value" : "festa@festa.com" }, { "type" : "APPLICATIONID", "value" : "Restaurante" } ], "status" : "" }
+);
+
+------------------------------------------------------------------------------------------
+
+mongoexport --db restaurante --collection security --out sec.json
+mongoimport --db TheHouseOfThePath --collection security --file sec.json
+
+mongodump --out /data/backup/
+mongodump --out /home/daniel
+
+------------------------------------------------------------------------------------------
+
+DANIELREST = Admin Restaurante/ Festa Junina
+
+Mais um
+Mais dois
+
+db.getSiblingDB("festajunina").getCollection("security").find({});
+db.getSiblingDB("festajunina").getCollection("orders").find({});
+db.getSiblingDB("festajunina").getCollection("security").find({ userid : "manuel@manuel.com" });
+it
+db.getSiblingDB("festajunina").getCollection("security").remove( { userid : "PSRNASC@OUTLOOK.COM" } )
+
+db.getSiblingDB("festajunina").getCollection("dishes").find({});
+it
+db.getSiblingDB("festajunina").getCollection("orders").update( { id : "59526" }, { $set: { status : "Placed"  }  });
+
+db.getSiblingDB("festajunina").getCollection("security").find({});
+
+db.getSiblingDB("festajunina").getCollection("security").remove( { "userid" : "hey@dude" } )
+
+db.getSiblingDB("restaurante").getCollection("dishes").remove( { name : "DanielHardCoded52" } )
+db.getSiblingDB("restaurante").getCollection("dishes").find({ name : "DanielHardCoded52" } );
+
+db.getSiblingDB("restaurante").getCollection("dishes").find({ name : /DanielHardCoded/ } );
+
+db.getSiblingDB("restaurante").getCollection("dishes").remove( { name : /DanielHardCoded/ } )
+
+db.getSiblingDB("restaurante").getCollection("dishes").remove( { name : "DanielHardCoded52" } )
+db.getSiblingDB("restaurante").getCollection("dishes").find({});
+
+db.getSiblingDB("restaurante").getCollection("orders").find({});
+db.getSiblingDB("restaurante").getCollection("orders").remove( { id : "54819" } )
+db.getSiblingDB("restaurante").getCollection("orders").find({ id : "92437" });
+
+92437
+
+db.getSiblingDB("restaurante").getCollection("orders").remove( { clientname : "Daniel Festa" } )
+db.getSiblingDB("restaurante").getCollection("orders").remove( { clientname : "Daniel Festa" } )
+
+db.getSiblingDB("restaurante").getCollection("orders").find({"clientname":""});
+db.getSiblingDB("restaurante").getCollection("orders").remove( {"clientname":""})
+
+db.getSiblingDB("restaurante").getCollection("orders").find({"clientname":""});
+
+db.getSiblingDB("restaurante").getCollection("orders").remove( {"clientname":""})
+
+db.getSiblingDB("restaurante").getCollection("orders").find({});
+
+
+db.getCollection('security').find({});
+
+db.getCollection('security').find({"userid" : "belnorth"});
+
+db.security.deleteOne( {  "_id" : ObjectId("5a601885aa0db9ee22c4e9e4") } );
+
+db.security.replaceOne(
+   { "_id" : ObjectId("5a70710d2a6d97d6326acfed") },
+{
+    "_id": ObjectId("5a70710d2a6d97d6326acfed"),
+    "userid": "Secretary@belnorth.org",
+    "name": "",
+    "password": "a7f07da18c5beac462a8d871cff6ba2a5a948628",
+    "passwordvalidate": "a7f07da18c5beac462a8d871cff6ba2a5a948628",
+    "applicationid": "Belnorth",
+    "status": "Active",
+    "jwt": "",
+    "claimset": [
+        {
+            "type": "USERTYPE",
+            "value": "ADMIN"
+        },
+        {
+            "type": "USERID",
+            "value": "Secretary@belnorth.org"
+        },
+        {
+            "type": "APPLICATIONID",
+            "value": "Belnorth"
+        }
+    ]
+}
+);
+
+{ "_id" : ObjectId("5a5ff4f8aa0db9ee22c4e44b"), "userid" : "Gaz", "name" : "", "password" : "643872028fde1cc0bd0b87a725644c8a55fdbe47", "passwordvalidate" : "643872028fde1cc0bd0b87a725644c8a55fdbe47", "roles" : [ ] }
+
+
+{ "_id" : ObjectId("5a55904c8d7d4a5249c7a192"), "userid" : "Daniel", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Bitcoin", "jwt" : "X", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "test" }, { "type" : "APPLICATIONID", "value" : "Bitcoin" } ] }
+{ "_id" : ObjectId("5a56dfe8aa0db9ee22c44731"), "userid" : "arthurfomachado@gmail.com", "name" : "", "password" : "615193f904a227a9cebf5ad3042a37668b81f4c6", "passwordvalidate" : "615193f904a227a9cebf5ad3042a37668b81f4c6", "roles" : [ ] }
+{ "_id" : ObjectId("5a5c03a8aa0db9ee22c49cad"), "userid" : "test", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Bitcoin", "jwt" : "X", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "test" }, { "type" : "APPLICATIONID", "value" : "Bitcoin" } ] }
+{ "_id" : ObjectId("5a5c03cdaa0db9ee22c49cb5"), "userid" : "gogglegaz@gmail.com", "name" : "", "password" : "b3fda3d8dbf8ce867da1a41f97050e397678b274", "passwordvalidate" : "b3fda3d8dbf8ce867da1a41f97050e397678b274", "roles" : [ ] }
+{ "_id" : ObjectId("5a5c0417aa0db9ee22c49ccb"), "userid" : "test2", "name" : "", "password" : "109f4b3c50d7b0df729d299bc6f8e9ef9066971f", "passwordvalidate" : "109f4b3c50d7b0df729d299bc6f8e9ef9066971f", "roles" : [ ] }
+{ "_id" : ObjectId("5a5c0425aa0db9ee22c49ccc"), "userid" : "test3", "name" : "", "password" : "3ebfa301dc59196f18593c45e519287a23297589", "passwordvalidate" : "3ebfa301dc59196f18593c45e519287a23297589", "roles" : [ ] }
+{ "_id" : ObjectId("5a5ff4f8aa0db9ee22c4e44b"), "userid" : "Gaz", "name" : "", "password" : "643872028fde1cc0bd0b87a725644c8a55fdbe47", "passwordvalidate" : "643872028fde1cc0bd0b87a725644c8a55fdbe47", "roles" : [ ] }
+
+
+"{&#34;UserID&#34;:&#34;daniel3&#34;,&#34;UserName&#34;:&#34;&#34...+443 more"
+
+
+
+{
+    "_id" : ObjectId("5a7032f87e48e1db38c3380c"),
+    "userid" : "belnorth",
+    "name" : "",
+    "password" : "a3b36a068f1d094d2074740daa23d1e7a7c34081",
+    "passwordvalidate" : "a3b36a068f1d094d2074740daa23d1e7a7c34081",
+    "applicationid" : "Belnorth",
+    "status" : "Active",
+    "jwt" : "",
+    "claimset" : [ 
+        {
+            "type" : "USERTYPE",
+            "value" : "ADMIN"
+        }, 
+        {
+            "type" : "USERID",
+            "value" : "belnorth"
+        }, 
+        {
+            "type" : "APPLICATIONID",
+            "value" : "Belnorth"
+        }
+    ]
+}
+
+
+{ "_id" : ObjectId("5a703ad02a6d97d6326acb77"), "userid" : "belnorth", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Belnorth", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "belnorth" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ], "status" : "" }
+
+
+{ "_id" : ObjectId("5a703ad02a6d97d6326acb77"), "userid" : "belnorth", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Belnorth", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "belnorth" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ], "status" : "" }
+
+
+// Belnorth Users
+// Original record
+{ "_id" : ObjectId("5a706eb62a6d97d6326acfbc"), "userid" : "treasurer@belnorth.org", "name" : "", "password" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "passwordvalidate" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "applicationid" : "Belnorth", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "treasurer@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ], "status" : "" }
+{ "_id" : ObjectId("5a70710d2a6d97d6326acfed"), "userid" : "Secretary@belnorth.org", "name" : "", "password" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "passwordvalidate" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "applicationid" : "Belnorth", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Secretary@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ], "status" : "" }
+
+
+// treasurer
+//
+db.security.replaceOne(
+   { "_id" : ObjectId("5a706eb62a6d97d6326acfbc") },
+   { "_id" : ObjectId("5a706eb62a6d97d6326acfbc"), "userid" : "treasurer@belnorth.org", "name" : "", "password" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "passwordvalidate" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "applicationid" : "Belnorth", "status" : "Active", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "treasurer@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ], "status" : "" }
+);
+
+db.security.replaceOne(
+   { "_id" : ObjectId("5a70710d2a6d97d6326acfed") },
+   { "_id" : ObjectId("5a70710d2a6d97d6326acfed"), "userid" : "Secretary@belnorth.org", "name" : "", "password" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "passwordvalidate" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "applicationid" : "Belnorth", "status" : "Active", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Secretary@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ], "status" : "" }
+);
+
+
+//  after
+
+OR:{ "_id" : ObjectId("5a706eb62a6d97d6326acfbc"), "userid" : "treasurer@belnorth.org", "name" : "", "password" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "passwordvalidate" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "applicationid" : "Belnorth",                "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "treasurer@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ], "status" : "" }
+
+UP:{ "_id" : ObjectId("5a706eb62a6d97d6326acfbc"), 
+	 "userid" : "treasurer@belnorth.org", 
+	 "name" : "", 
+	 "password" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", 
+	 "passwordvalidate" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", 
+	 "applicationid" : "Belnorth", 
+	 "status" : "", 
+	 "jwt" : "", 
+	 "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "treasurer@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+
+{ "_id" : ObjectId("5a70710d2a6d97d6326acfed"), "userid" : "Secretary@belnorth.org", "name" : "", "password" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "passwordvalidate" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "applicationid" : "Belnorth", "status" : "", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Secretary@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+
+
+
+
+
+    "_id": ObjectId("5a70710d2a6d97d6326acfed"),
+    "userid": "Secretary@belnorth.org",
+    "name": "",
+    "password": "a7f07da18c5beac462a8d871cff6ba2a5a948628",
+    "passwordvalidate": "a7f07da18c5beac462a8d871cff6ba2a5a948628",
+    "applicationid": "Belnorth",
+    "status": "Active",
+    "jwt": "",
+    "claimset": [
+        {
+            "type": "USERTYPE",
+            "value": "ADMIN"
+        },
+        {
+            "type": "USERID",
+            "value": "Secretary@belnorth.org"
+        },
+        {
+            "type": "APPLICATIONID",
+            "value": "Belnorth"
+        }
+    ]
+}
+
+
+
+
+
+
+
+{ "_id" : ObjectId("5a6da6242a6d97d6326a9504"), "userid" : "Daniel4", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Belnorth", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Daniel4" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+{ "_id" : ObjectId("5a6dc2392a6d97d6326a9765"), "userid" : "Daniel3", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Restaurante", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Daniel3" }, { "type" : "APPLICATIONID", "value" : "Restaurante" } ] }
+{ "_id" : ObjectId("5a6eb1ca2a6d97d6326aaab6"), "userid" : "Bel", "name" : "", "password" : "47339068f2e5504c23b3616722153604e4de357a", "passwordvalidate" : "47339068f2e5504c23b3616722153604e4de357a", "applicationid" : "Belnorth", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Bel" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+{ "_id" : ObjectId("5a703ad02a6d97d6326acb77"), "userid" : "belnorth", "name" : "", "password" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "passwordvalidate" : "0c204c77daeff4a62914b8c0d1c9fc154691afda", "applicationid" : "Belnorth", "status" : "Active", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "belnorth" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+{ "_id" : ObjectId("5a704e9d2a6d97d6326acd18"), "userid" : "daniel", "name" : "", "password" : "da39a3ee5e6b4b0d3255bfef95601890afd80709", "passwordvalidate" : "da39a3ee5e6b4b0d3255bfef95601890afd80709", "applicationid" : "Restaurante", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "daniel" }, { "type" : "APPLICATIONID", "value" : "Restaurante" } ], "status" : "" }
+{ "_id" : ObjectId("5a704ead2a6d97d6326acd19"), "userid" : "meu", "name" : "", "password" : "6ac201b07f135bfc397550575b31b268304ed6f1", "passwordvalidate" : "6ac201b07f135bfc397550575b31b268304ed6f1", "applicationid" : "Restaurante", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "meu" }, { "type" : "APPLICATIONID", "value" : "Restaurante" } ], "status" : "" }
+{ "_id" : ObjectId("5a704ecf2a6d97d6326acd22"), "userid" : "q", "name" : "", "password" : "22ea1c649c82946aa6e479e1ffd321e4a318b1b0", "passwordvalidate" : "22ea1c649c82946aa6e479e1ffd321e4a318b1b0", "applicationid" : "Restaurante", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "q" }, { "type" : "APPLICATIONID", "value" : "Restaurante" } ], "status" : "" }
+{ "_id" : ObjectId("5a704ef52a6d97d6326acd23"), "userid" : "sadsa", "name" : "", "password" : "da39a3ee5e6b4b0d3255bfef95601890afd80709", "passwordvalidate" : "da39a3ee5e6b4b0d3255bfef95601890afd80709", "applicationid" : "Restaurante", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "sadsa" }, { "type" : "APPLICATIONID", "value" : "Restaurante" } ], "status" : "" }
+{ "_id" : ObjectId("5a706eb62a6d97d6326acfbc"), "userid" : "treasurer@belnorth.org", "name" : "", "password" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "passwordvalidate" : "277ff3bf30c1a4148c4be17fee9288dd2b0cb986", "applicationid" : "Belnorth", "status" : "", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "treasurer@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+{ "_id" : ObjectId("5a70710d2a6d97d6326acfed"), "userid" : "Secretary@belnorth.org", "name" : "", "password" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "passwordvalidate" : "a7f07da18c5beac462a8d871cff6ba2a5a948628", "applicationid" : "Belnorth", "status" : "", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "Secretary@belnorth.org" }, { "type" : "APPLICATIONID", "value" : "Belnorth" } ] }
+{ "_id" : ObjectId("5a710f2c2a6d97d6326adc8e"), "userid" : "a@a.com", "name" : "", "password" : "86f7e437faa5a7fce15d1ddcb9eaeaea377667b8", "passwordvalidate" : "86f7e437faa5a7fce15d1ddcb9eaeaea377667b8", "applicationid" : "Bitcoin", "jwt" : "", "claimset" : [ { "type" : "USERTYPE", "value" : "ADMIN" }, { "type" : "USERID", "value" : "a@a.com" }, { "type" : "APPLICATIONID", "value" : "Bitcoin" } ], "status" : "" }
+
