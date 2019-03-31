@@ -28,12 +28,12 @@ func Hfind(httpwriter http.ResponseWriter, httprequest *http.Request) {
 	fmt.Println("objecttofind")
 	fmt.Println(objecttofind)
 
-	objectfound, recordstatus := actions.Find(objecttofind)
+	objectfound, _ = actions.Find(objecttofind)
 
-	if recordstatus != "200 OK" {
-		http.Error(httpwriter, "Record not found.", 400)
-		return
-	}
+	// if recordstatus != "200 OK" {
+	// 	http.Error(httpwriter, "Record not found.", 400)
+	// 	return
+	// }
 
 	json.NewEncoder(httpwriter).Encode(&objectfound)
 }
@@ -41,16 +41,16 @@ func Hfind(httpwriter http.ResponseWriter, httprequest *http.Request) {
 // Hadd is
 func Hadd(httpwriter http.ResponseWriter, req *http.Request) {
 
-	toadd := models.Activity{}
+	objectaction := models.Activity{}
 
-	toadd.ShortName = req.FormValue("shortname")
-	toadd.Description = req.FormValue("description") // This is the key, must be unique
-	toadd.Type = req.FormValue("type")
-	toadd.Status = req.FormValue("status")
-	toadd.StartDate = req.FormValue("startdate")
-	toadd.EndDate = req.FormValue("enddate")
+	objectaction.Name = req.FormValue("activityname") // This is the key, must be unique
+	objectaction.Type = req.FormValue("activitytype")
+	objectaction.Status = req.FormValue("activitystatus")
+	objectaction.Description = req.FormValue("activitydescription")
+	objectaction.StartDate = req.FormValue("activitystartdate")
+	objectaction.EndDate = req.FormValue("activityenddate")
 
-	_, recordstatus := actions.Find(toadd.ShortName)
+	_, recordstatus := actions.Find(objectaction.Name)
 	if recordstatus == "200 OK" {
 		http.Error(httpwriter, "Record already exists.", 422)
 		return
@@ -64,7 +64,7 @@ func Hadd(httpwriter http.ResponseWriter, req *http.Request) {
 	// dishtoadd.DairyFree = params.Get("dishdairyfree")
 	// dishtoadd.Vegetarian = params.Get("dishvegetarian")
 
-	ret := actions.Add(toadd)
+	ret := actions.Add(objectaction)
 
 	if ret.IsSuccessful == "Y" {
 		// do something
@@ -100,13 +100,12 @@ func getobject(httpwriter http.ResponseWriter, req *http.Request) models.Activit
 
 	objectaction := models.Activity{}
 
-	objectaction.ShortName = req.FormValue("activityshorthname") // This is the key, must be unique
+	objectaction.Name = req.FormValue("activityname") // This is the key, must be unique
 	objectaction.Type = req.FormValue("activitytype")
+	objectaction.Status = req.FormValue("activitystatus")
 	objectaction.Description = req.FormValue("activitydescription")
 	objectaction.StartDate = req.FormValue("activitystartdate")
 	objectaction.EndDate = req.FormValue("activityenddate")
-	objectaction.LongDescription = req.FormValue("activitylongdescription")
-	objectaction.Status = req.FormValue("activitystatus")
 
 	return objectaction
 }

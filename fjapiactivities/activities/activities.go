@@ -71,7 +71,7 @@ func Find(objectFind string) (activities.Activity, string) {
 	fmt.Println(database.Database)
 
 	result := []activities.Activity{}
-	err1 := c.Find(bson.M{"shortname": objectName}).All(&result)
+	err1 := c.Find(bson.M{"name": objectName}).All(&result)
 	if err1 != nil {
 		log.Fatal(err1)
 	}
@@ -173,7 +173,7 @@ func Update(objectUpdate activities.Activity) helper.Resultado {
 
 	collection := session.DB(database.Database).C(database.Collection)
 
-	err = collection.Update(bson.M{"name": objectUpdate.ShortName}, objectUpdate)
+	err = collection.Update(bson.M{"name": objectUpdate.Name}, objectUpdate)
 
 	if err != nil {
 		log.Fatal(err)
@@ -203,7 +203,7 @@ func Delete(objectDelete activities.Activity) helper.Resultado {
 
 	collection := session.DB(database.Database).C(database.Collection)
 
-	err = collection.Remove(bson.M{"name": objectDelete.ShortName})
+	err = collection.Remove(bson.M{"name": objectDelete.Name})
 
 	if err != nil {
 		log.Fatal(err)
