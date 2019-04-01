@@ -28,12 +28,12 @@ func Hfind(httpwriter http.ResponseWriter, httprequest *http.Request) {
 	fmt.Println("objecttofind")
 	fmt.Println(objecttofind)
 
-	objectfound, _ = actions.Find(objecttofind)
+	objectfound, recordstatus := actions.Find(objecttofind)
 
-	// if recordstatus != "200 OK" {
-	// 	http.Error(httpwriter, "Record not found.", 400)
-	// 	return
-	// }
+	if recordstatus != "200 OK" {
+		http.Error(httpwriter, "Record not found.", 400)
+		return
+	}
 
 	json.NewEncoder(httpwriter).Encode(&objectfound)
 }
@@ -41,28 +41,13 @@ func Hfind(httpwriter http.ResponseWriter, httprequest *http.Request) {
 // Hadd is
 func Hadd(httpwriter http.ResponseWriter, req *http.Request) {
 
-	objectaction := models.Activity{}
-
-	objectaction.Name = req.FormValue("activityname") // This is the key, must be unique
-	objectaction.Type = req.FormValue("activitytype")
-	objectaction.Status = req.FormValue("activitystatus")
-	objectaction.Description = req.FormValue("activitydescription")
-	objectaction.StartDate = req.FormValue("activitystartdate")
-	objectaction.EndDate = req.FormValue("activityenddate")
+	objectaction := getobject(httpwriter, req)
 
 	_, recordstatus := actions.Find(objectaction.Name)
 	if recordstatus == "200 OK" {
 		http.Error(httpwriter, "Record already exists.", 422)
 		return
 	}
-
-	// params := req.URL.Query()
-	// dishtoadd.Name = params.Get("dishname")
-	// dishtoadd.Type = params.Get("dishtype")
-	// dishtoadd.Price = params.Get("dishprice")
-	// dishtoadd.GlutenFree = params.Get("dishglutenfree")
-	// dishtoadd.DairyFree = params.Get("dishdairyfree")
-	// dishtoadd.Vegetarian = params.Get("dishvegetarian")
 
 	ret := actions.Add(objectaction)
 
@@ -75,6 +60,15 @@ func Hadd(httpwriter http.ResponseWriter, req *http.Request) {
 func Hupdate(httpwriter http.ResponseWriter, req *http.Request) {
 
 	objectaction := getobject(httpwriter, req)
+
+	_, recordstatus := actions.Find(objectaction.Name)
+
+	if recordstatus == "200 OK" {
+		//
+	} else {
+		http.Error(httpwriter, "Record does not exist.", 422)
+		return
+	}
 
 	ret := actions.Update(objectaction)
 
@@ -107,6 +101,14 @@ func getobject(httpwriter http.ResponseWriter, req *http.Request) models.Activit
 	objectaction.StartDate = req.FormValue("activitystartdate")
 	objectaction.EndDate = req.FormValue("activityenddate")
 
+	// params := req.URL.Query()
+	// objectaction.Name = params.Get("dishname")
+	// objectaction.Type = params.Get("dishtype")
+	// objectaction.Price = params.Get("dishprice")
+	// objectaction.GlutenFree = params.Get("dishglutenfree")
+	// objectaction.DairyFree = params.Get("dishdairyfree")
+	// objectaction.Vegetarian = params.Get("dishvegetarian")
+
 	return objectaction
 }
 
@@ -124,12 +126,4 @@ func Hlist(httpwriter http.ResponseWriter, req *http.Request) {
 	var list = actions.Getall()
 
 	json.NewEncoder(httpwriter).Encode(&list)
-}
-
-// Hlistavailable is a function to return a list of dishes
-func Hlistavailable(httpwriter http.ResponseWriter, req *http.Request) {
-
-	var dishlist = actions.GetAvailable()
-
-	json.NewEncoder(httpwriter).Encode(&dishlist)
 }

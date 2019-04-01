@@ -175,14 +175,19 @@ func Update(objectUpdate activities.Activity) helper.Resultado {
 
 	err = collection.Update(bson.M{"name": objectUpdate.Name}, objectUpdate)
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	var res helper.Resultado
 	res.ErrorCode = "0001"
-	res.ErrorDescription = "Something Happened"
+	res.ErrorDescription = "All good"
 	res.IsSuccessful = "Y"
+
+	if err != nil {
+
+		fmt.Println(err)
+
+		res.ErrorCode = "0002"
+		res.ErrorDescription = err.Error()
+		res.IsSuccessful = "Y"
+	}
 
 	return res
 }
